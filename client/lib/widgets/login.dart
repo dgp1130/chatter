@@ -5,8 +5,10 @@ import 'package:quiver/core.dart';
 class Login extends StatefulWidget {
   Login({
     Key key,
-    this.onSubmitUsername = const Optional.absent(),
-  }) : super(key: key);
+    void Function(String) onSubmitUsername,
+  }) : 
+    this.onSubmitUsername = Optional.fromNullable(onSubmitUsername),
+    super(key: key);
 
   final Optional<void Function(String)> onSubmitUsername;
 
