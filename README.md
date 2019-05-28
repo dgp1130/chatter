@@ -33,6 +33,9 @@ go get -u https://github.com/gin-contrib/static
 # Build client (webdev command comes from the Flutter Web technical preview).
 (cd client && webdev build)
 
+# Test client.
+(cd client && pub run test/**/*.dart)
+
 # Run server.
 go run server/server.go
 ```
