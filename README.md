@@ -34,6 +34,7 @@ go get -u https://github.com/gin-contrib/static
 (cd client && webdev build)
 
 # Test client.
+# Note: This only tests non-UI tests because Flutter Web testing isn't well supported atm.
 (cd client && pub run test/**/*.dart)
 
 # Run server.
