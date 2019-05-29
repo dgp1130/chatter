@@ -1,9 +1,20 @@
-# Files and directories created by pub
+# Files and directories created by pub.
 client/.dart_tool/
 client/.packages
 
-# Conventional directory for build outputs
+# Conventional directory for build outputs.
 client/build/
 
-# Directory created by dartdoc
+# Directory created by dartdoc.
 client/doc/api/
+
+# Go binaries.
+server/bin/
+
+# Third party Go packages.
+server/pkg/
+
+# Third party Go sources.
+server/src/github.com/
+server/src/golang.org/
+server/src/gopkg.in/

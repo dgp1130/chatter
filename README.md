@@ -26,6 +26,9 @@ To actually run the server:
 git clone https://github.com/dgp1130/chatter
 cd chatter
 
+# Set up GOPATH.
+export GOPATH="$(realpath server/):${GOPATH}"
+
 # Install server dependencies.
 go get -u https://github.com/gin-gonic/gin
 go get -u https://github.com/gin-contrib/static
@@ -37,6 +40,9 @@ go get -u https://github.com/gin-contrib/static
 # Note: This only tests non-UI tests because Flutter Web testing isn't well supported atm.
 (cd client && pub run test/**/*.dart)
 
+# Test server.
+go test chatter/...
+
 # Run server.
-go run server/server.go
+go run server/src/chatter/server.go
 ```
