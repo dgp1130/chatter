@@ -7,14 +7,3 @@ client/build/
 
 # Directory created by dartdoc.
 client/doc/api/
-
-# Go binaries.
-server/bin/
-
-# Third party Go packages.
-server/pkg/
-
-# Third party Go sources.
-server/src/github.com/
-server/src/golang.org/
-server/src/gopkg.in/
