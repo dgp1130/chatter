@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"chatter/models"
+	"github.com/dgp1130/chatter/server/models"
 
 	"github.com/gin-gonic/gin"
 )

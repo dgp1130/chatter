@@ -24,14 +24,7 @@ To actually run the server:
 ```bash
 # Clone the repo.
 git clone https://github.com/dgp1130/chatter
-cd chatter
-
-# Set up GOPATH.
-export GOPATH="$(realpath server/):${GOPATH}"
-
-# Install server dependencies.
-go get -u https://github.com/gin-gonic/gin
-go get -u https://github.com/gin-contrib/static
+cd chatter/
 
 # Build client (webdev command comes from the Flutter Web technical preview).
 (cd client && webdev build)
@@ -41,8 +34,8 @@ go get -u https://github.com/gin-contrib/static
 (cd client && pub run test/**/*.dart)
 
 # Test server.
-go test chatter/...
+go test ./...
 
 # Run server.
-go run server/src/chatter/server.go
+go run server/server.go
 ```

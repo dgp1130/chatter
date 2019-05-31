@@ -1,7 +1,7 @@
 package main
 
 import (
-	"chatter/api"
+	"github.com/dgp1130/chatter/server/api"
 
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
