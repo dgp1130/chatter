@@ -13,21 +13,22 @@ type RoomsAPI struct {
 	// Store rooms in memory. This should really use a database to scale better, but I just don't
 	// feel like dealing with a SQL database atm.
 	rooms      []models.Room
-	currRoomID chan int
+	currRoomID <-chan int
 }
 
 // Init initializes the API into an object to facilitate testing.
 func Init() RoomsAPI {
+	c := make(chan int)
 	api := RoomsAPI{
 		rooms:      []models.Room{},
-		currRoomID: make(chan int),
+		currRoomID: c,
 	}
 
 	// Perpetually send unique IDs on the channel.
 	go func() {
 		currID := 0
 		for {
-			api.currRoomID <- currID
+			c <- currID
 			currID++
 		}
 	}()
