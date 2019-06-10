@@ -34,13 +34,6 @@ probably also want:
 # Clone the repo.
 git clone https://github.com/dgp1130/chatter .
 
-# Test client.
-# Note: This only runs non-UI tests because Flutter Web testing isn't well supported atm.
-(cd client && pub run test/**/*.dart)
-
-# Test server.
-go test ./...
-
 # Run server on port 8080.
 docker build -t chatter .
 docker run --rm -p 8080:8080 chatter
@@ -55,6 +48,13 @@ You'll need to build the project locally for many editor features to work.
 # Build client manually.
 (cd client && webdev build)
 
+# Test client.
+# Note: This only runs non-UI tests because Flutter Web testing isn't well supported atm.
+(cd client && pub run test/**/*.dart)
+
 # Run server manually.
 go run server/server.go
+
+# Test server.
+go test ./...
 ```
