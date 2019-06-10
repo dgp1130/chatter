@@ -15,7 +15,16 @@ To actually run the server:
 
 ### Install Dependencies
 
+To run the project, you'll need:
+
 *   [Git](https://git-scm.com) (or you could download the zip, but who does that?)
+*   [Docker](https://docker.com)
+
+### Dev Dependencies
+
+If you want to develop with an editor that understands the project, you'll
+probably also want:
+
 *   [Go Lang](https://golang.org)
 *   [Flutter Web (technical preview)](https://github.com/flutter/flutter_web)
 
@@ -23,19 +32,29 @@ To actually run the server:
 
 ```bash
 # Clone the repo.
-git clone https://github.com/dgp1130/chatter
-cd chatter/
-
-# Build client (webdev command comes from the Flutter Web technical preview).
-(cd client && webdev build)
+git clone https://github.com/dgp1130/chatter .
 
 # Test client.
-# Note: This only tests non-UI tests because Flutter Web testing isn't well supported atm.
+# Note: This only runs non-UI tests because Flutter Web testing isn't well supported atm.
 (cd client && pub run test/**/*.dart)
 
 # Test server.
 go test ./...
 
-# Run server.
+# Run server on port 8080.
+docker build -t chatter .
+docker run --rm -p 8080:8080 chatter
+```
+
+### Development
+
+An editor like Visual Studio Code won't use Intellisense based on the Docker build.
+You'll need to build the project locally for many editor features to work.
+
+```bash
+# Build client manually.
+(cd client && webdev build)
+
+# Run server manually.
 go run server/server.go
 ```
