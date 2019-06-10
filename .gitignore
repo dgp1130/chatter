@@ -2,6 +2,10 @@
 client/.dart_tool/
 client/.packages
 
+# Targets not used for this project.
+client/android/
+client/ios/
+
 # Conventional directory for build outputs.
 client/build/
 
