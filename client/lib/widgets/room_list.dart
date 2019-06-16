@@ -21,11 +21,39 @@ class RoomList extends StatelessWidget {
       appBar: AppBar(
         title: Text('Room List'),
       ),
-      body: this.rooms.isPresent ? this._buildRoomList(ctx, this.rooms.first) : this._buildLoadingIcon(),
+      body: !this.rooms.isPresent ? _Loading() : _RoomList(
+        rooms: this.rooms.first,
+        onSelectRoom: onSelectRoom,
+      ),
     );
   }
+}
 
-  Widget _buildRoomList(final BuildContext ctx, final List<Room> rooms) {
+class _Loading extends StatelessWidget {
+  const _Loading({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+}
+
+class _RoomList extends StatelessWidget {
+  const _RoomList({
+    Key key,
+    @required this.onSelectRoom,
+    @required this.rooms,
+  }) : super(key: key);
+
+  final Optional<void Function(Room)> onSelectRoom;
+  final List<Room> rooms;
+
+  @override
+  Widget build(final BuildContext context) {
     return Center(
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -40,14 +68,14 @@ class RoomList extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: Text('Choose a room to join.',
-                    style: Theme.of(ctx).textTheme.headline,
+                    style: Theme.of(context).textTheme.headline,
                   ),
                 ),
               ),
               Expanded(
                 child: ListView(
                   children: ListTile.divideTiles(
-                    context: ctx,
+                    context: context,
                     tiles: rooms.map((room) => ListTile(
                       title: Text(room.name),
                       onTap: () => onSelectRoom.ifPresent((cb) => cb(room)),
@@ -59,12 +87,6 @@ class RoomList extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildLoadingIcon() {
-    return Center(
-      child: CircularProgressIndicator(),
     );
   }
 }
