@@ -31,7 +31,7 @@ RUN flutter packages upgrade
 COPY client/assets/ assets/
 COPY client/lib/ lib/
 COPY client/web/ web/
-RUN flutter packages pub global run webdev build
+RUN flutter packages pub global run webdev build --no-release
 
 FROM golang AS server
 
