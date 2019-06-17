@@ -1,4 +1,5 @@
 import 'package:chatter/models/room.dart';
+import 'package:chatter/widgets/future_value.dart';
 import 'package:flutter_web/material.dart';
 import 'package:flutter_web/widgets.dart';
 import 'package:quiver/core.dart';
@@ -12,7 +13,7 @@ class RoomList extends StatelessWidget {
     this.onSelectRoom = Optional.fromNullable(onSelectRoom),
     super(key: key);
 
-  final Optional<List<Room>> rooms;
+  final Future<List<Room>> rooms;
   final Optional<void Function(Room)> onSelectRoom;
 
   @override
@@ -21,23 +22,15 @@ class RoomList extends StatelessWidget {
       appBar: AppBar(
         title: Text('Room List'),
       ),
-      body: !this.rooms.isPresent ? _Loading() : _RoomList(
-        rooms: this.rooms.first,
-        onSelectRoom: onSelectRoom,
+      body: FutureValue(
+        future: rooms,
+        onCompleted: (rooms) => _RoomList(
+          rooms: rooms,
+          onSelectRoom: onSelectRoom,
+        ),
+        onPending: () => _Loading(),
+        onError: (ex) => _Error(ex: ex),
       ),
-    );
-  }
-}
-
-class _Loading extends StatelessWidget {
-  const _Loading({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: CircularProgressIndicator(),
     );
   }
 }
@@ -72,7 +65,7 @@ class _RoomList extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
+              rooms.isEmpty ? Text('No rooms.') : Expanded(
                 child: ListView(
                   children: ListTile.divideTiles(
                     context: context,
@@ -85,6 +78,40 @@ class _RoomList extends StatelessWidget {
               ),
             ]
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Loading extends StatelessWidget {
+  const _Loading({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(final BuildContext context) {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+}
+
+class _Error extends StatelessWidget {
+  const _Error({
+    Key key,
+    this.ex,
+  }) : super(key: key);
+
+  final dynamic ex;
+
+  @override
+  Widget build(final BuildContext context) {
+    return Center(
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(5),
+          child: Text("Failed to load rooms.\n${ex}", style: TextStyle(fontSize: 14)),
         ),
       ),
     );

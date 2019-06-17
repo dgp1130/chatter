@@ -14,7 +14,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   Optional<User> _user = const Optional.absent();
-  Optional<List<Room>> _rooms = const Optional.absent();
+  Future<List<Room>> _rooms = null;
   Optional<Room> _currentRoom = const Optional.absent();
 
   @override
@@ -22,9 +22,9 @@ class _AppState extends State<App> {
     super.initState();
 
     // Pre-fetch the list of rooms while the user is logging in.
-    rooms.fetchRooms().then((rooms) => setState(() {
-      this._rooms = Optional.of(rooms.toList());
-    }));
+    setState(() {
+      this._rooms = rooms.fetchRooms();
+    });
   }
 
   @override

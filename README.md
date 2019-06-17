@@ -50,7 +50,7 @@ You'll need to build the project locally for many editor features to work.
 
 # Test client.
 # Note: This only runs non-UI tests because Flutter Web testing isn't well supported atm.
-(cd client && pub run test/**/*.dart)
+(cd client && pub run test)
 
 # Run server manually.
 go run server/server.go
