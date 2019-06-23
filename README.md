@@ -19,6 +19,8 @@ To run the project, you'll need:
 
 *   [Git](https://git-scm.com) (or you could download the zip, but who does that?)
 *   [Docker](https://docker.com)
+*   [Kubernetes](https://kubernetes.io/) with
+    [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/)
 
 ### Dev Dependencies
 
@@ -37,6 +39,15 @@ git clone https://github.com/dgp1130/chatter .
 # Run server on port 8080.
 docker build -t chatter .
 docker run --rm -p 8080:8080 chatter
+
+# Run application on Kubernetes via Minikube.
+minikube start
+kubectl apply -f k8s.yaml
+minikube service chatter # Opens app in browser.
+
+# Stop Kubernetes.
+kubectl delete service/chatter deployment.apps/chatter
+minikube stop
 ```
 
 ### Development
