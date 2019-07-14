@@ -21,7 +21,7 @@ void main() {
 
         final roomList = await rooms.fetchRooms(client);
 
-        verify(client.get('http://localhost:8080/api/rooms/list'));
+        verify(client.get('/api/rooms/list'));
 
         expect(Room(id: 0, name: "Foo"), equals(Room(id: 0, name: "Foo")));
         expect(roomList, equals(<Room>[

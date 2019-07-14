@@ -8,7 +8,7 @@ import 'package:chatter/models/room.dart';
 ///     intended to be used by production code.
 Future<List<Room>> fetchRooms([final http.Client injectedClient]) async {
   final client = injectedClient ?? http.Client();
-  final res = await client.get('http://localhost:8080/api/rooms/list');
+  final res = await client.get('/api/rooms/list');
 
   if (res.statusCode != 200 /* HTTP OK */) {
     throw Exception('Failed to fetch rooms, received non-OK HTTP status: ${res.statusCode}');
