@@ -17,20 +17,23 @@ To actually run the server:
 
 To run the project, you'll need:
 
-*   [Git](https://git-scm.com) (or you could download the zip, but who does that?)
-*   [Docker](https://docker.com)
-*   [Kubernetes](https://kubernetes.io/) with
-    [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/)
+* [Git](https://git-scm.com) (or you could download the zip, but who does that?)
+* [Docker](https://docker.com)
+* [Kubernetes](https://kubernetes.io/) with
+  [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/)
 
 ### Dev Dependencies
 
 If you want to develop with an editor that understands the project, you'll
 probably also want:
 
-*   [Go Lang](https://golang.org)
-*   [Flutter Web (technical preview)](https://github.com/flutter/flutter_web)
+* [Go Lang](https://golang.org)
+* [Flutter Web (technical preview)](https://github.com/flutter/flutter_web)
 
 ### Build and Start the Server
+
+Currently the entire application is run by a single server. This is likely to
+change in the future, but for now it can be run locally with:
 
 ```bash
 # Clone the repo.
@@ -38,12 +41,29 @@ git clone https://github.com/dgp1130/chatter .
 
 # Run server on port 8080.
 docker build -t chatter .
-docker run --rm -p 8080:8080 chatter
+docker run --rm -p 8080:80 chatter
+```
 
-# Run application on Kubernetes via Minikube.
+### Run the entire Kubernetes service locally
+
+This service is configured to be deployed with Kubernetes. Currently this only
+consists of the one Docker image, but a larger microservice architecture is
+like to follow. The Kubernetes configuration can be tested locally by starting
+up the entire service:
+
+```bash
+# Start Minikube environment.
 minikube start
-kubectl apply -f k8s.yaml
-minikube service chatter # Opens app in browser.
+eval $(minikube docker-env)
+
+# Build server.
+docker build -t chatter:latest .
+
+# Apply Kubernetes configuration to only local images.
+kubectl apply -f k8s.yaml --image-pull-policy=Never
+
+# Open app in browser.
+minikube service chatter
 
 # Stop Kubernetes.
 kubectl delete service/chatter deployment.apps/chatter

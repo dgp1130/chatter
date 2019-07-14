@@ -55,5 +55,5 @@ COPY --from=client /chatter/client/build/ /chatter/client/build/
 WORKDIR /chatter/
 
 # Export server port and executable.
-EXPOSE 8080
+EXPOSE 80
 ENTRYPOINT ["/chatter/server/server"]

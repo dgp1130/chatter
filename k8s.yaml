@@ -8,8 +8,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 8080
-    targetPort: 8080
+  - port: 80
+    targetPort: 80
   selector:
     app: chatter
 
@@ -36,4 +36,4 @@ spec:
       - name: chatter
         image: dgp1130/chatter:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 80

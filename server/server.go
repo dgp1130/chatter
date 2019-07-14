@@ -19,5 +19,5 @@ func main() {
 	a.Bind(s)
 
 	// Start server.
-	s.Run(":8080")
+	s.Run(":80")
 }
