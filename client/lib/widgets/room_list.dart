@@ -1,5 +1,4 @@
 import 'package:chatter/models/room.dart';
-import 'package:chatter/widgets/future_value.dart';
 import 'package:flutter_web/material.dart';
 import 'package:flutter_web/widgets.dart';
 import 'package:quiver/core.dart';
@@ -9,12 +8,15 @@ class RoomList extends StatelessWidget {
     Key key,
     @required this.rooms,
     void Function(Room) onSelectRoom,
+    void Function() onReloadRooms,
   }) :
     this.onSelectRoom = Optional.fromNullable(onSelectRoom),
+    this.onReloadRooms = Optional.fromNullable(onReloadRooms),
     super(key: key);
 
   final Future<List<Room>> rooms;
   final Optional<void Function(Room)> onSelectRoom;
+  final Optional<void Function()> onReloadRooms;
 
   @override
   Widget build(final BuildContext ctx) {
@@ -22,14 +24,26 @@ class RoomList extends StatelessWidget {
       appBar: AppBar(
         title: Text('Room List'),
       ),
-      body: FutureValue(
+      body: FutureBuilder(
         future: rooms,
-        onCompleted: (rooms) => _RoomList(
-          rooms: rooms,
-          onSelectRoom: onSelectRoom,
-        ),
-        onPending: () => _Loading(),
-        onError: (ex) => _Error(ex: ex),
+        builder: (final BuildContext context, AsyncSnapshot<List<Room>> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              throw new AssertionError('List rooms request not started.');
+            case ConnectionState.active:
+            case ConnectionState.waiting:
+              return _Loading();
+            case ConnectionState.done:
+              if (snapshot.hasError) {
+                return _Error(onReloadRooms: onReloadRooms);
+              } else {
+                return _RoomList(
+                  rooms: snapshot.data,
+                  onSelectRoom: onSelectRoom,
+                );
+              }
+          }
+        }
       ),
     );
   }
@@ -100,20 +114,24 @@ class _Loading extends StatelessWidget {
 class _Error extends StatelessWidget {
   const _Error({
     Key key,
-    this.ex,
+    @required this.onReloadRooms,
   }) : super(key: key);
 
-  final dynamic ex;
+  final Optional<void Function()> onReloadRooms;
 
   @override
-  Widget build(final BuildContext context) {
-    return Center(
-      child: Card(
-        child: Padding(
-          padding: EdgeInsets.all(5),
-          child: Text("Failed to load rooms.\n${ex}", style: TextStyle(fontSize: 14)),
-        ),
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Center(
+        child: Text('Oh noes!')
       ),
+      content: Text('We couldn\'t connect to the server! Maybe it\'s on fire? 🔥💻🔥'),
+      actions: <Widget>[
+        GestureDetector(
+          onTap: () => this.onReloadRooms.ifPresent((cb) => cb()),
+          child: Text('Retry', style: TextStyle(color: Colors.lightBlue, fontSize: 18)),
+        ),
+      ],
     );
   }
 }

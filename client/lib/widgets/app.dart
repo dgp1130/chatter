@@ -22,9 +22,7 @@ class _AppState extends State<App> {
     super.initState();
 
     // Pre-fetch the list of rooms while the user is logging in.
-    setState(() {
-      this._rooms = rooms.fetchRooms();
-    });
+    this._fetchRooms();
   }
 
   @override
@@ -47,8 +45,15 @@ class _AppState extends State<App> {
           onSelectRoom: (room) => setState(() {
             _currentRoom = Optional.of(room);
           }),
+          onReloadRooms: this._fetchRooms,
         ),
       },
     );
+  }
+
+  void _fetchRooms() {
+    this.setState(() {
+      this._rooms = rooms.fetchRooms();
+    });
   }
 }
