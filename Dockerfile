@@ -1,7 +1,8 @@
 FROM google/dart AS flutter
 
-RUN apt-get update
-RUN apt-get install -y wget xz-utils
+RUN apt-get update && apt-get install -y \
+    wget \
+    xz-utils
 
 # Download and extract Flutter to /flutter.
 RUN wget https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.5.4-hotfix.2-stable.tar.xz -O /tmp/flutter.tar.xz
