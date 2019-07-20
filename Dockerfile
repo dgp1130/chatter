@@ -32,24 +32,30 @@ COPY client/assets/ assets/
 COPY client/lib/ lib/
 COPY client/web/ web/
 RUN flutter packages pub global run webdev build --no-release
+# Client is built at /chatter/client/build/...
 
 FROM golang AS server
 
 # Install dependencies as a separate step, so they don't need to be re-built
-# with ever server/ change.
+# with every server/ change.
 WORKDIR /chatter/
 COPY go.mod .
 COPY go.sum .
 RUN go mod download
 
 # Copy server source code and build it.
+# Build is statitically linked so it can be copied outside the container.
 COPY server/ /chatter/server/
 WORKDIR /chatter/server/
-RUN go build
+RUN CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' .
+# Server binary is built at /chatter/server/server.
+
+FROM scratch AS final
 
 # Copy over static files from client to serve.
 COPY --from=client /chatter/client/assets/ /chatter/client/assets/
 COPY --from=client /chatter/client/build/ /chatter/client/build/
+COPY --from=server /chatter/server/server /chatter/server/server
 
 # Switch working directory so server file paths line up to client static files.
 WORKDIR /chatter/
