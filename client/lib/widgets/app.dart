@@ -14,7 +14,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   Optional<User> _user = const Optional.absent();
-  Future<List<Room>> _rooms = null;
+  Optional<Future<List<Room>>> _rooms = Optional.absent();
   Optional<Room> _currentRoom = const Optional.absent();
 
   @override
@@ -41,11 +41,20 @@ class _AppState extends State<App> {
           },
         ),
         '/room-list': (ctx) => RoomList(
-          rooms: _rooms,
+          rooms: _rooms.value, // Must have started requesting rooms to get here.
           onSelectRoom: (room) => setState(() {
             _currentRoom = Optional.of(room);
           }),
           onReloadRooms: this._fetchRooms,
+          onAddRoom: (room) {
+            setState(() {
+              // Prepend the new room to the rooms list.
+              this._rooms = this._rooms.transform((futureRooms) async {
+                final rooms = await futureRooms;
+                return [room, ...rooms];
+              });
+            });
+          },
         ),
       },
     );
@@ -53,7 +62,7 @@ class _AppState extends State<App> {
 
   void _fetchRooms() {
     this.setState(() {
-      this._rooms = rooms.fetchRooms();
+      this._rooms = Optional.of(rooms.fetchRooms());
     });
   }
 }
