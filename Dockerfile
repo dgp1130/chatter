@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y \
     xz-utils
 
 # Download and extract Flutter to /flutter.
-RUN wget https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.5.4-hotfix.2-stable.tar.xz -O /tmp/flutter.tar.xz
+RUN wget -nv https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.5.4-hotfix.2-stable.tar.xz -O /tmp/flutter.tar.xz
 RUN mkdir /flutter/
 RUN tar xf /tmp/flutter.tar.xz -C /flutter/ --strip-components=1
 
