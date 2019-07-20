@@ -1,4 +1,4 @@
-FROM google/dart AS flutter
+FROM google/dart:2.4 AS flutter
 
 RUN apt-get update && apt-get install -y \
     wget \
@@ -35,7 +35,7 @@ COPY client/web/ web/
 RUN flutter packages pub global run webdev build --no-release
 # Client is built at /chatter/client/build/...
 
-FROM golang AS server
+FROM golang:1.12.7 AS server
 
 # Install dependencies as a separate step, so they don't need to be re-built
 # with every server/ change.
