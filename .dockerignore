@@ -1,0 +1,7 @@
+# Don't include IDE configurations.
+.vscode/
+
+# Don't include locally generated client builds.
+client/build/
+client/.dart_tool/
+client/.packages
