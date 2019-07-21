@@ -13,7 +13,7 @@ Go channels and this seems like a relatively straightfowarded way of
 doing that. Also wanted to play around more with Flutter, can try out
 their new web technical preview at the same time for the client.
 
-## Runbook
+## Development
 
 To actually run the server:
 
@@ -52,7 +52,7 @@ docker run --rm -p 8080:80 chatter
 
 This service is configured to be deployed with Kubernetes. Currently this only
 consists of the one Docker image, but a larger microservice architecture is
-like to follow. The Kubernetes configuration can be tested locally by starting
+likely to follow. The Kubernetes configuration can be tested locally by starting
 up the entire service:
 
 ```bash
