@@ -74,7 +74,7 @@ kubectl delete service/chatter deployment.apps/chatter
 minikube stop
 ```
 
-### Development
+### Tests and non-container builds
 
 An editor like Visual Studio Code won't use Intellisense based on the Docker build.
 You'll need to build the project locally for many editor features to work.
