@@ -2,6 +2,10 @@
 
 Chat application built with a Go server and Flutter client.
 
+A running instance is available at [http://chatter.technology/](http://chatter.technology/),
+hosted on [Google Cloud Platform](https://cloud.google.com/) w/
+[Google Domains](https://domains.google.com).
+
 ## Motivation
 
 Just having some fun with a simple project. Wanted to play around with
