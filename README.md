@@ -74,7 +74,17 @@ kubectl delete service/chatter deployment.apps/chatter
 minikube stop
 ```
 
-### Tests and non-container builds
+### Running tests
+
+There are `client-test` and `server-test` stages in the Docker build which represent test execution
+for the two codebases. These can be run locally with:
+
+```bash
+docker build -t chatter-client-test . --target client-test && docker run --rm -it chatter-client-test
+docker build -t chatter-server-test . --target server-test && docker run --rm -it chatter-server-test
+```
+
+### Local development
 
 An editor like Visual Studio Code won't use Intellisense based on the Docker build.
 You'll need to build the project locally for many editor features to work.

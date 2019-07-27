@@ -35,6 +35,11 @@ COPY client/web/ web/
 RUN flutter packages pub global run webdev build --no-release
 # Client is built at /chatter/client/build/...
 
+FROM client as client-test
+
+ADD client/test/ test/
+ENTRYPOINT ["pub", "run", "test"]
+
 FROM golang:1.12.7 AS server
 
 # Install dependencies as a separate step, so they don't need to be re-built
@@ -50,6 +55,10 @@ COPY server/ /chatter/server/
 WORKDIR /chatter/server/
 RUN CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' .
 # Server binary is built at /chatter/server/server.
+
+FROM server AS server-test
+
+ENTRYPOINT ["go", "test", "./..."]
 
 FROM scratch AS final
 
