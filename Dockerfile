@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y \
     xz-utils
 
 # Download and extract Flutter to /flutter.
-RUN wget -nv https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.5.4-hotfix.2-stable.tar.xz -O /tmp/flutter.tar.xz
+RUN wget -nv https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.7.8+hotfix.4-stable.tar.xz -O /tmp/flutter.tar.xz
 RUN mkdir /flutter/
 RUN tar xf /tmp/flutter.tar.xz -C /flutter/ --strip-components=1
 
@@ -23,7 +23,7 @@ WORKDIR /chatter/client/
 # with every client/ change.
 COPY client/pubspec.yaml .
 COPY client/pubspec.lock .
-RUN flutter pub global activate webdev
+RUN flutter pub global activate webdev 2.3.0
 RUN flutter packages upgrade
 
 # Copy rest of client/ subdrectories. Don't include all of client/ because
@@ -32,6 +32,7 @@ RUN flutter packages upgrade
 COPY client/assets/ assets/
 COPY client/lib/ lib/
 COPY client/web/ web/
+RUN flutter packages pub global run webdev --version
 RUN flutter packages pub global run webdev build --no-release
 # Client is built at /chatter/client/build/...
 
