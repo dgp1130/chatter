@@ -32,7 +32,6 @@ RUN flutter packages upgrade
 COPY client/assets/ assets/
 COPY client/lib/ lib/
 COPY client/web/ web/
-RUN flutter packages pub global run webdev --version
 RUN flutter packages pub global run webdev build --no-release
 # Client is built at /chatter/client/build/...
 
