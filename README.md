@@ -6,6 +6,8 @@ A running instance is available at [http://chatter.technology/](http://chatter.t
 hosted on [Google Cloud Platform](https://cloud.google.com/) w/
 [Google Domains](https://domains.google.com).
 
+[![Build Status](https://travis-ci.com/dgp1130/chatter.svg?branch=master)](https://travis-ci.com/dgp1130/chatter)
+
 ## Motivation
 
 Just having some fun with a simple project. Wanted to play around with
