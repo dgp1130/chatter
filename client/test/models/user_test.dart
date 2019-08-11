@@ -9,7 +9,7 @@ void main() {
     });
 
     test('fails', () {
-      expect('foo', 'bar');
+      expect('foo', 'baz');
     });
   });
 }
