@@ -45,3 +45,7 @@ func TestRoomJSONDeserialization(t *testing.T) {
 		Name: "Froom",
 	}, r)
 }
+
+func TestFailed(t *testing.T) {
+	assert.Equal(t, "foo", "bar")
+}
