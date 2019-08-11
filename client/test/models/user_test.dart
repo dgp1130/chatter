@@ -7,9 +7,5 @@ void main() {
       final User user = User('Bob');
       expect(user.name, 'Bob');
     });
-
-    test('fails', () {
-      expect('foo', 'baz');
-    });
   });
 }
