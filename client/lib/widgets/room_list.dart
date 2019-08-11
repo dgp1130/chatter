@@ -54,6 +54,9 @@ class _RoomListState extends State<RoomList> {
                   onSelectRoom: widget.onSelectRoom,
                 );
               }
+              break;
+            default:
+              throw new AssertionError('Unknown connection state: ${snapshot.connectionState}');
           }
         }
       ),
