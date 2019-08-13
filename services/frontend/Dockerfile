@@ -1,13 +1,19 @@
-FROM gradle:jdk10 as build
+FROM gradle:jdk12 as build
 
-COPY --chown=gradle:gradle services/frontend/ /chatter/services/frontend/
+# Pull dependencies first so this is only dependent on the Gradle file. Chaning regular source code
+# won't require a re-download.
 WORKDIR /chatter/services/frontend/
-RUN gradle build --no-daemon
-# Built at /chatter/services/frontend/build/libs/chatter-all.jar
+COPY --chown=gradle:gradle services/frontend/build.gradle .
+RUN gradle dependencies --no-daemon
 
-FROM openjdk:10-jre-slim
+# Build the server.
+COPY --chown=gradle:gradle services/frontend/ .
+RUN gradle build --no-daemon
+# Built at /chatter/services/frontend/build/libs/chatter.jar
+
+FROM openjdk:12-alpine
 
 WORKDIR /chatter/
-COPY --from=build /chatter/services/frontend/build/libs/chatter-all.jar /chatter/services/frontend/server.jar
+COPY --from=build /chatter/services/frontend/build/libs/chatter.jar /chatter/services/frontend/server.jar
 
 ENTRYPOINT ["java", "-jar", "/chatter/services/frontend/server.jar"]
