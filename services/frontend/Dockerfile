@@ -46,6 +46,7 @@ RUN npm install -g typescript
 
 FROM tsc as deps
 
+WORKDIR /chatter/services/frontend/
 COPY services/frontend/package.json .
 COPY services/frontend/package-lock.json .
 
@@ -54,7 +55,6 @@ RUN npm install
 
 FROM deps as build
 
-WORKDIR /chatter/services/frontend/
 COPY services/frontend/ .
 
 RUN tsc src/server.ts
