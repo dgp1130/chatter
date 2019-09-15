@@ -1,19 +1,21 @@
-FROM gradle:jdk12 as build
+FROM node:10-slim as tsc
 
-# Pull dependencies first so this is only dependent on the Gradle file. Chaning regular source code
-# won't require a re-download.
-WORKDIR /chatter/services/frontend/
-COPY --chown=gradle:gradle services/frontend/build.gradle .
-RUN gradle dependencies --no-daemon
+RUN npm install -g typescript
 
-# Build the server.
-COPY --chown=gradle:gradle services/frontend/ .
-RUN gradle build --no-daemon
-# Built at /chatter/services/frontend/build/libs/chatter.jar
+FROM tsc as deps
 
-FROM openjdk:12-alpine
+COPY services/frontend/package.json .
+COPY services/frontend/package-lock.json .
 
-WORKDIR /chatter/
-COPY --from=build /chatter/services/frontend/build/libs/chatter.jar /chatter/services/frontend/server.jar
+RUN npm install
 
-ENTRYPOINT ["java", "-jar", "/chatter/services/frontend/server.jar"]
+FROM deps as build
+
+WORKDIR /chatter/services/frontend
+
+COPY services/frontend/ .
+
+RUN tsc src/server.ts
+# Outputs as src/server.js
+
+ENTRYPOINT ["npm", "start"]

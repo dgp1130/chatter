@@ -14,3 +14,6 @@ client/doc/api/
 
 # Visual Studio Code configs which should not be checked in.
 **/*.code-workspace
+
+# Node dependencies.
+**/node_modules/
