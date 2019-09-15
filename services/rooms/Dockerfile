@@ -15,8 +15,15 @@ FROM deps as build
 
 COPY services/rooms/ .
 
-RUN tsc src/server.ts
-# Outputs as src/server.js
+# Compile all *.ts sources to *.js with the same name/path in the build/ directory.
+# TypeScript compiler is configured in tsconfig.json.
+RUN tsc
+
+FROM build as test
+
+ENTRYPOINT ["npm", "test"]
+
+FROM build as server
 
 EXPOSE 80
 ENTRYPOINT ["npm", "start"]
