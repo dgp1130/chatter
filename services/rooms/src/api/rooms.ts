@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import * as HttpStatus from 'http-status-codes';
 import Room from '../models/room';
 import SimpleResponse from '../models/simple_response';
+import { stringify } from 'querystring';
 
 /** Container of local state related to the Rooms API. */
 export default class RoomsApi {
@@ -44,8 +45,12 @@ export default class RoomsApi {
 // Safely parses the "name" field out of unsanitized JSON.
 function parseName(json: unknown): string {
     if (!json) throw new IllegalArgumentError('Must provide a JSON body in the request.');
+    if (typeof json !== 'object') {
+        throw new IllegalArgumentError('Request body must be a JSON object.');
+    }
     
-    const name = json['name'] as unknown;
+    const jsonObj = json as Record<string, unknown>;
+    const name = jsonObj['name'] as unknown;
     if (name === undefined) throw new IllegalArgumentError('Must provide a "name" field.');
     if (typeof name !== 'string') {
         throw new IllegalArgumentError('Must provide the "name" field as a string.');

@@ -29,6 +29,15 @@ describe('rooms', () => {
             expect(res.status).toBe(HttpStatus.BAD_REQUEST);
         });
 
+        it('responds HTTP Bad Request when body is not a JSON object', () => {
+            const rooms = new RoomsApi();
+            const res = rooms.create({
+                body: 'test',
+            } as Request);
+
+            expect(res.status).toBe(HttpStatus.BAD_REQUEST);
+        });
+
         it('responds HTTP Bad Request when not given a "name" field', () => {
             const rooms = new RoomsApi();
             const res = rooms.create({
