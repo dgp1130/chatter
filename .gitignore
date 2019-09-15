@@ -11,3 +11,6 @@ client/build/
 
 # Directory created by dartdoc.
 client/doc/api/
+
+# Visual Studio Code configs which should not be checked in.
+**/*.code-workspace
