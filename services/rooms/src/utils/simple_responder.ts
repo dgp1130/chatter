@@ -1,4 +1,4 @@
-import {Request, Response} from 'express';
+import {Request, Response, NextFunction} from 'express';
 import SimpleResponse from '../models/simple_response';
 
 /**
@@ -27,8 +27,8 @@ import SimpleResponse from '../models/simple_response';
  * @returns Express route handler.
  */
 export function simpleResponder(handler: (req: Request) => SimpleResponse|Promise<SimpleResponse>)
-        :(req: Request, res: Response) => Promise<void> {
-    return async function(req: Request, res: Response) {
+        :(req: Request, res: Response, next: NextFunction) => void {
+    return asyncHandler(async (req: Request, res: Response) => {
         const simpleResponseOrPromise = handler(req);
         const simpleResponse = simpleResponseOrPromise instanceof Promise
             ? await simpleResponseOrPromise
@@ -37,5 +37,20 @@ export function simpleResponder(handler: (req: Request) => SimpleResponse|Promis
         res.status(simpleResponse.status)
             .contentType(simpleResponse.contentType)
             .end(simpleResponse.body);
+    });
+}
+
+// Provides an Express handler which awaits the given async handler and propagates the result/errors
+// correctly to Express.
+function asyncHandler(handler: (req: Request, res: Response) => Promise<void>)
+        : (req: Request, res: Response, next: NextFunction) => void {
+    return async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            await handler(req, res);
+        } catch (err) {
+            next(err);
+            return;
+        }
+        next();
     };
 }
