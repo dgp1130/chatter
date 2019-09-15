@@ -1,0 +1,29 @@
+{
+  "name": "chatter-rooms-service",
+  "version": "1.0.0",
+  "description": "Service which provides CRUD functionality for chat rooms.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dgp1130/chatter.git"
+  },
+  "keywords": [
+    "chatter"
+  ],
+  "author": "Douglas Parker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dgp1130/chatter/issues"
+  },
+  "homepage": "https://github.com/dgp1130/chatter#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.1",
+    "@types/node": "^12.7.5"
+  }
+}
