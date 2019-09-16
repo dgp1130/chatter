@@ -11,11 +11,16 @@ export default class Room {
         this.name = name;
     }
 
-    /** Serializes this Room to JSON. */
-    public stringify(): string {
-        return JSON.stringify({
+    /** Serializes this Room to a raw JavaScript object. */
+    public serialize(): SerializedRoom {
+        return {
             id: this.id,
             name: this.name,
-        }, null /* replacer */, 4 /* spaces per tab */);
+        };
     }
+}
+
+interface SerializedRoom {
+    id: number;
+    name: string;
 }

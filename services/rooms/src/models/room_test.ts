@@ -15,16 +15,16 @@ describe('Room', () => {
         });
     });
 
-    describe('stringify()', () => {
-        it('returns the Room as JSON', () => {
+    describe('serialize()', () => {
+        it('returns the Room as a basic object', () => {
             const room = new Room({
                 id: 5,
                 name: 'foo',
             });
 
-            const json = room.stringify();
+            const serialized = room.serialize();
 
-            expect(JSON.parse(json)).toEqual({
+            expect(serialized).toEqual({
                 id: 5,
                 name: 'foo',
             });

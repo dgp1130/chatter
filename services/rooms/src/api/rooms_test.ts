@@ -122,4 +122,43 @@ describe('rooms', () => {
             });
         });
     });
+
+    describe('list()', () => {
+        it('responds HTTP OK with an empty list when no rooms exist', () => {
+            const rooms = new RoomsApi();
+
+            const res = rooms.list({} as Request);
+
+            expect(res.status).toBe(HttpStatus.OK);
+            expect(res.contentType).toBe('application/json');
+            expect(JSON.parse(res.body)).toEqual([]);
+        });
+
+        it('responds HTTP OK with all the currently available rooms', () => {
+            const rooms = new RoomsApi();
+
+            rooms.create({
+                body: {
+                    name: 'foo',
+                },
+            } as Request);
+            rooms.create({
+                body: {
+                    name: 'bar',
+                },
+            } as Request);
+
+            const res = rooms.list({} as Request);
+
+            expect(res.status).toBe(HttpStatus.OK);
+            expect(res.contentType).toBe('application/json');
+            expect(JSON.parse(res.body)).toEqual([{
+                id: 0,
+                name: 'foo',
+            }, {
+                id: 1,
+                name: 'bar',
+            }]);
+        });
+    });
 });

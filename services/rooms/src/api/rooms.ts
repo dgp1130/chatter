@@ -11,6 +11,7 @@ export default class RoomsApi {
      * requests. This is temporary until rooms are stored in a proper database.
      */
     private nextRoomId: number = 0;
+    private rooms: Room[] = [];
 
     /** Creates a room with the given information. */
     public create(req: Request): SimpleResponse {
@@ -32,12 +33,30 @@ export default class RoomsApi {
         // Create a new Room with a clean ID and the given name.
         const id = this.nextRoomId++;
         const room = new Room({id, name});
+        this.rooms.push(room);
         
         // Respond with new Room as JSON.
         return new SimpleResponse({
             status: HttpStatus.OK,
             contentType: 'application/json',
-            body: room.stringify(),
+            body: JSON.stringify(
+                room.serialize(),
+                null /* replacer */,
+                4 /* spaces per tab */,
+            ),
+        });
+    }
+
+    /** Lists all available rooms. */
+    public list(req: Request): SimpleResponse {
+        return new SimpleResponse({
+            status: HttpStatus.OK,
+            contentType: 'application/json',
+            body: JSON.stringify(
+                this.rooms.map((room) => room.serialize()),
+                null /* replacer */,
+                4 /* spaces per tab */,
+            ),
         });
     }
 }

@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 // Bind Rooms API route handlers.
 const rooms = new RoomsApi();
 app.post('/api/rooms/create', simpleResponder(rooms.create.bind(rooms)));
+app.get('/api/rooms/list', simpleResponder(rooms.list.bind(rooms)));
 
 // Begin listening for requests.
 const port = process.env.PORT || 80;
