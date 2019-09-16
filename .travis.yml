@@ -6,7 +6,7 @@ services:
 before_install:
   - docker build -t dgp1130/chatter-client-test . --target client-test
   - docker build -t dgp1130/chatter-server-test . --target server-test
-  - docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-test . --target chatter-rooms-test
+  - docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-test . --target test
 
 script:
   - docker run --rm -it dgp1130/chatter-client-test
