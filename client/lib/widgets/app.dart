@@ -2,7 +2,7 @@ import 'package:chatter/models/room.dart';
 import 'package:chatter/models/user.dart';
 import 'package:chatter/widgets/login.dart';
 import 'package:chatter/widgets/room_list.dart';
-import 'package:flutter_web/material.dart';
+import 'package:flutter/material.dart';
 import 'package:quiver/core.dart';
 import 'package:chatter/api/rooms.dart' as rooms;
 

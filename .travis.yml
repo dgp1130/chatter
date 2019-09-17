@@ -4,11 +4,9 @@ services:
   - docker
 
 before_install:
-  - docker build -t dgp1130/chatter-client-test . --target client-test
-  - docker build -t dgp1130/chatter-server-test . --target server-test
+  - docker build -f services/frontend/Dockerfile -t dgp1130/chatter-frontend-test . --target test
   - docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-test . --target test
 
 script:
-  - docker run --rm -it dgp1130/chatter-client-test
-  - docker run --rm -it dgp1130/chatter-server-test
-  - docker run --rm -it dgp1130/chatter-rooms-test
+  - docker run --rm -it -t dgp1130/chatter-frontend-test
+  - docker run --rm -it -t dgp1130/chatter-rooms-test

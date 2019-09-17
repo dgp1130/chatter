@@ -34,38 +34,30 @@ If you want to develop with an editor that understands the project, you'll
 probably also want:
 
 * [Go Lang](https://golang.org)
-* [Flutter Web (technical preview)](https://github.com/flutter/flutter_web)
+* [Flutter](https://github.com/flutter/flutter)
 
-### Build and Start the Server
-
-Currently the entire application is run by a single server. This is likely to
-change in the future, but for now it can be run locally with:
+### Get the Source Code
 
 ```bash
-# Clone the repo.
 git clone https://github.com/dgp1130/chatter .
-
-# Run server on port 8080.
-docker build -t chatter .
-docker run --rm -p 8080:80 chatter
 ```
 
 ### Run the entire Kubernetes service locally
 
-This service is configured to be deployed with Kubernetes. Currently this only
-consists of the one Docker image, but a larger microservice architecture is
-likely to follow. The Kubernetes configuration can be tested locally by starting
-up the entire service:
+This service is configured to be deployed with Kubernetes. Individual microservices have their own
+README files which describe how to run/debug/test them. The entire Kubernetes configuration can be
+tested locally by starting up the entire service:
 
 ```bash
 # Start Minikube environment.
 minikube start
 eval $(minikube docker-env)
 
-# Build server.
-docker build -t chatter:latest .
+# Build services.
+docker build -f services/frontend/Dockerfile -t chatter-frontend-service:latest .
+docker build -f services/rooms/Dockerfile -t chatter-rooms-service:latest .
 
-# Apply Kubernetes configuration to only local images.
+# Apply Kubernetes configuration while only using local images.
 kubectl apply -f k8s.yaml --image-pull-policy=Never
 
 # Open app in browser.
@@ -76,28 +68,18 @@ kubectl delete service/chatter deployment.apps/chatter
 minikube stop
 ```
 
-### Running tests
-
-There are `client-test` and `server-test` stages in the Docker build which represent test execution
-for the two codebases. These can be run locally with:
-
-```bash
-docker build -t chatter-client-test . --target client-test && docker run --rm -it chatter-client-test
-docker build -t chatter-server-test . --target server-test && docker run --rm -it chatter-server-test
-```
-
 ### Local development
 
 An editor like Visual Studio Code won't use Intellisense based on the Docker build.
-You'll need to build the project locally for many editor features to work.
+You'll need to build the project locally (outside of Docker) for many editor features to work.
 
 ```bash
 # Build client manually.
-(cd client && webdev build)
+(cd client && flutter build web)
 
 # Test client.
 # Note: This only runs non-UI tests because Flutter Web testing isn't well supported atm.
-(cd client && pub run test)
+(cd client && flutter packages pub run test)
 
 # Run server manually.
 go run server/server.go

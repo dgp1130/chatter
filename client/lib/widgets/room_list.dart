@@ -1,8 +1,8 @@
 import 'package:chatter/api/rooms.dart' as rooms;
 import 'package:chatter/models/room.dart';
 import 'package:chatter/utils/show_blocking_dialog.dart';
-import 'package:flutter_web/material.dart';
-import 'package:flutter_web/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:quiver/core.dart';
 
 class RoomList extends StatefulWidget {
@@ -41,7 +41,7 @@ class _RoomListState extends State<RoomList> {
         builder: (final BuildContext context, AsyncSnapshot<List<Room>> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
-              throw new AssertionError('List rooms request not started.');
+              throw AssertionError('List rooms request not started.');
             case ConnectionState.active:
             case ConnectionState.waiting:
               return _Loading();
@@ -56,7 +56,7 @@ class _RoomListState extends State<RoomList> {
               }
               break;
             default:
-              throw new AssertionError('Unknown connection state: ${snapshot.connectionState}');
+              throw AssertionError('Unknown connection state: ${snapshot.connectionState}');
           }
         }
       ),

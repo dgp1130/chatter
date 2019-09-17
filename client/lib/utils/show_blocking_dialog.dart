@@ -1,4 +1,4 @@
-import 'package:flutter_web/material.dart';
+import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 
 /// Flutter helper method to show a dialog whose lifecycle is dicated by a Future.

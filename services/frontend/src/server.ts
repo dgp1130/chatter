@@ -2,7 +2,7 @@ import * as express from 'express';
 
 const app = express();
 
-app.use(express.static('/chatter/client/build/'));
+app.use(express.static('/chatter/client/build/web/'));
 app.use('/assets/', express.static('/chatter/client/assets/'));
 
 const port = process.env.PORT || 80;
