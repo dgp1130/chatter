@@ -1,40 +1,98 @@
-# Chatter service.
-apiVersion: v1
-kind: Service
+# Ingress
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
 metadata:
-  name: chatter
-  labels:
-    app: chatter
+  name: chatter-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
-  type: LoadBalancer
-  loadBalancerIP: "35.230.3.243"
-  ports:
-  - port: 80
-    targetPort: 80
-  selector:
-    app: chatter
+  rules:
+  - host: chatter.technology
+    http: &http_rules
+      paths:
+      - path: /(api/rooms/.*)
+        backend:
+          serviceName: chatter-rooms-service
+          servicePort: 80
+      - path: /(.*)
+        backend:
+          serviceName: chatter-frontend-service
+          servicePort: 80
+  - host: "*.chatter.technology"
+    http: *http_rules
 
 ---
 
-# Service deployment.
+# Frontend service.
+kind: Service
+apiVersion: v1
+metadata:
+  name: chatter-frontend-service
+spec:
+  selector:
+    app: chatter-frontend-service
+  ports:
+  - port: 80
+
+---
+
+# Frontend service deployment.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: chatter
+  name: chatter-frontend-deployment
   labels:
     app: chatter
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: chatter
+      app: chatter-frontend-service
   template:
     metadata:
       labels:
-        app: chatter
+        app: chatter-frontend-service
     spec:
       containers:
-      - name: chatter
-        image: dgp1130/chatter:latest
+      - name: chatter-frontend-service
+        image: dgp1130/chatter-frontend-service
+        ports:
+        - containerPort: 80
+
+---
+
+# Rooms service.
+kind: Service
+apiVersion: v1
+metadata:
+  name: chatter-rooms-service
+spec:
+  selector:
+    app: chatter-rooms-service
+  ports:
+  - port: 80
+
+---
+
+# Frontend service deployment.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatter-rooms-deployment
+  labels:
+    app: chatter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chatter-rooms-service
+  template:
+    metadata:
+      labels:
+        app: chatter-rooms-service
+    spec:
+      containers:
+      - name: chatter-rooms-service
+        image: dgp1130/chatter-rooms-service
         ports:
         - containerPort: 80

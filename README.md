@@ -51,20 +51,35 @@ tested locally by starting up the entire service:
 ```bash
 # Start Minikube environment.
 minikube start
-eval $(minikube docker-env)
+minikube addons enable ingress
 
 # Build services.
-docker build -f services/frontend/Dockerfile -t chatter-frontend-service:latest .
-docker build -f services/rooms/Dockerfile -t chatter-rooms-service:latest .
+docker build -f services/frontend/Dockerfile -t dgp1130/chatter-frontend-service:latest .
+docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-service:latest .
+
+# Push services to Minikube Docker environment.
+# HACK: We should just build these in the Minikube context, but the frontend server refuses to build
+# for an unknown reason. This is a workaround for the time being.
+docker save dgp1130/chatter-frontend-service | (eval $(minikube docker-env) && docker load)
+docker save dgp1130/chatter-rooms-service | (eval $(minikube docker-env) && docker load)
 
 # Apply Kubernetes configuration while only using local images.
-kubectl apply -f k8s.yaml --image-pull-policy=Never
+# NOTE: By default this will likely pull images from Docker Hub rather than using the local ones
+# just pushed. You probably want to edit k8s.yaml to specify `imagePullPolicy: Never` on the
+# deployment configurations before running this step.
+kubectl apply -f k8s.yaml
 
-# Open app in browser.
-minikube service chatter
+# Add Minikube IP to /etc/hosts. The application *must* be opened with a *.chatter.technology domain
+# or else the nginx ingress will not route requests correctly.
+echo -e "$(minikube ip)\tdev.chatter.technology" | sudo tee -a /etc/hosts > /dev/null
+
+# Open app in default browser.
+sensible-browser dev.chatter.technology
 
 # Stop Kubernetes.
-kubectl delete service/chatter deployment.apps/chatter
+kubectl delete services/chatter-{frontend,rooms}-service \
+    deployment.apps/chatter-{frontend,rooms}-deployment \
+    ingress/chatter-ingress
 minikube stop
 ```
 
