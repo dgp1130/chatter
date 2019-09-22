@@ -6,7 +6,7 @@ import * as HttpStatus from 'http-status-codes';
 
 describe('rooms', () => {
     describe('create()', () => {
-        it('responds HTTP OK with the new Room', () => {
+        it('responds HTTP Created with the new Room', () => {
             const rooms = new RoomsApi();
             const res = rooms.create({
                 body: {
@@ -14,7 +14,7 @@ describe('rooms', () => {
                 },
             } as Request);
 
-            expect(res.status).toBe(HttpStatus.OK);
+            expect(res.status).toBe(HttpStatus.CREATED);
             expect(res.contentType).toBe('application/json');
             expect(JSON.parse(res.body)).toEqual({
                 id: 0,
@@ -100,7 +100,7 @@ describe('rooms', () => {
             } as Request;
             const res1 = rooms.create(req1);
 
-            expect(res1.status).toBe(HttpStatus.OK);
+            expect(res1.status).toBe(HttpStatus.CREATED);
             expect(res1.contentType).toBe('application/json');
             expect(JSON.parse(res1.body)).toEqual({
                 id: 0,
@@ -114,7 +114,7 @@ describe('rooms', () => {
             } as Request;
             const res2 = rooms.create(req2);
 
-            expect(res2.status).toBe(HttpStatus.OK);
+            expect(res2.status).toBe(HttpStatus.CREATED);
             expect(res2.contentType).toBe('application/json');
             expect(JSON.parse(res2.body)).toEqual({
                 id: 1,

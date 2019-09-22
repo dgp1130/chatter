@@ -37,7 +37,7 @@ export default class RoomsApi {
         
         // Respond with new Room as JSON.
         return new SimpleResponse({
-            status: HttpStatus.OK,
+            status: HttpStatus.CREATED,
             contentType: 'application/json',
             body: JSON.stringify(
                 room.serialize(),
