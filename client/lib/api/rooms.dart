@@ -23,12 +23,18 @@ Future<List<Room>> fetchRooms([final http.Client injectedClient]) async {
 ///     intended to be used by production code.
 Future<Room> createRoom(final String name, [final http.Client injectedClient]) async {
   final client = injectedClient ?? http.Client();
-  final res = await client.post('/api/rooms/create', body: json.encode(<String, dynamic>{
+  final res = await client.post(
+    '/api/rooms/create',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: json.encode(<String, dynamic>{
     'name': name,
-  }));
+    }),
+  );
 
   if (res.statusCode != 201 /* HTTP Created */) {
-    throw Exception('Failed to create room, received non-OK HTTP status: ${res.statusCode}');
+    throw Exception('Failed to create room, received non-Created HTTP status: ${res.statusCode}');
   }
 
   final dynamic room = json.decode(res.body);

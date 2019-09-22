@@ -58,7 +58,11 @@ void main() {
     group('exposes a "createRoom" function', () {
       test('which returns the newly created Room from the server', () async {
         final client = MockClient();
-        when(client.post(any, body: anyNamed('body'))).thenAnswer((_) => Future.value(
+        when(client.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        )).thenAnswer((_) => Future.value(
           http.Response("""{
             "id": 0,
             "name": "Kitchen"
@@ -67,7 +71,11 @@ void main() {
 
         final room = await rooms.createRoom('Kitchen', client);
 
-        verify(client.post('/api/rooms/create',
+        verify(client.post(
+            '/api/rooms/create',
+            headers: argThat(equals({
+              'Content-Type': 'application/json',
+            }), named: 'headers'),
             body: argThat(equals('{"name":"Kitchen"}'), named: 'body'),
         ));
 
@@ -76,8 +84,11 @@ void main() {
 
       test('which throws an exception when an invalid status code is given', () async {
         final client = MockClient();
-        when(client.post(any, body: anyNamed('body')))
-            .thenAnswer((_) => Future.value(http.Response('', 500 /* HTTP Internal Error */)));
+        when(client.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        )).thenAnswer((_) => Future.value(http.Response('', 500 /* HTTP Internal Error */)));
 
         await expect(rooms.createRoom('Kitchen', client), throwsException);
       });
@@ -85,7 +96,11 @@ void main() {
       test('which throws an exception on connection dropped', () async {
         final client = MockClient();
         final ex = Exception('Oh noes!');
-        when(client.post(any, body: anyNamed('body'))).thenAnswer((_) => Future.error(ex));
+        when(client.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        )).thenAnswer((_) => Future.error(ex));
 
         await expect(rooms.createRoom('Kitchen', client), throwsA(ex));
       });
