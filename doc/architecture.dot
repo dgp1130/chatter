@@ -1,0 +1,22 @@
+digraph Architecture {
+    node [shape=rectangle]
+    rankdir = LR
+
+    "User";
+    "Browser";
+
+    "User" -> "Browser";
+    "Browser" -> "Nginx Ingress" [label="http://*.chatter.technology/*"];
+
+    subgraph cluster_k8s {
+        label = "Kubernetes Cluster";
+        style = "dotted";
+
+        "Nginx Ingress";
+        "Frontend Service";
+        "Rooms Service";
+
+        "Nginx Ingress" -> "Frontend Service" [label="/*"];
+        "Nginx Ingress" -> "Rooms Service" [label="/api/rooms/*"];
+    }
+}

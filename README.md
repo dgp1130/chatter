@@ -1,40 +1,72 @@
 # Chatter
 
-Chat application built with a Go server and Flutter client.
+Chat application built with NodeJS TypeScript microservices and a Flutter client.
 
 A running instance is available at [http://chatter.technology/](http://chatter.technology/),
 hosted on [Google Cloud Platform](https://cloud.google.com/) w/
-[Google Domains](https://domains.google.com).
+[Google Domains](https://domains.google.com) (but using Google Cloud nameservers).
 
 [![Build Status](https://travis-ci.com/dgp1130/chatter.svg?branch=master)](https://travis-ci.com/dgp1130/chatter)
 
 ## Motivation
 
-Just having some fun with a simple project. Wanted to play around with
-Go channels and this seems like a relatively straightfowarded way of
-doing that. Also wanted to play around more with Flutter, can try out
-their new web technical preview at the same time for the client.
+Just having some fun with a simple project. Wanted to play around with a few new technologies.
+Most notably this is using [Flutter Web](https://flutter.dev/web) to make a simple Single-Page App
+served using a microservice architecture with [Kubernetes](https://kubernetes.io/) and
+[Docker](https://www.docker.com/). Using Kubernetes for such a simple service is clearly overkill
+but I really just want to play with the technologies so I'm not that concerned with practicality.
+
+Some future work I hope to get around to at some point:
+
+* Figure out how persistent databases work in Kubernetes and set that up.
+* Set up SSL.
+* Convert JSON endpoints to gRPC.
+* Create a development instance (`dev.chatter.technology`) for pre-production testing.
+* Set up GitHub Actions to auto deploy to Kubernetes cluster.
+
+## Useful Links
+
+Below is a list of links to project-specific resources. Most of these require authentication to view
+and/or edit and will only work for me, I'm just listing these out so I don't forget and struggle to
+find them in the future.
+
+* [Google Kubernetes Engine Console](https://console.cloud.google.com/kubernetes/list?project=chatter-244623)
+* [Google Domains configuration](https://domains.google.com/m/registrar/chatter.technology/dns)
+  * This owns the DNS but simply redirects to Google Cloud's nameservers.
+* [Google Cloud DNS configuration](https://console.cloud.google.com/net-services/dns/zones/chatter-dns-zone?project=chatter-244623)
+  * This owns the Google Cloud nameserver configuration.
+* [Docker Hub author](https://hub.docker.com/u/dgp1130)
+* [Continuous Integration](https://travis-ci.com/dgp1130/chatter)
+  * [Configuration file](.travis.yml)
+
+## Architecture
+
+![Architecture Diagram](https://g.gravizo.com/source/svg?https://raw.githubusercontent.com/dgp1130/chatter/master/doc/architecture.dot)
 
 ## Development
 
-To actually run the server:
+Most development should be done on a service-by-service basis, so most of the time you only need to
+run a single service and develop against that directly. Each service should have its own
+documentation defining how it works and how to develop against it.
+
+### Services
+
+* [Frontend](services/frontend/README.md)
+* [Rooms](services/rooms/README.md)
+
+## Running the Entire Application
+
+When messing with the Kubernetes config, testing should be done locally with Minikube. In this case,
+it is necessary to run all the microservices locally.
 
 ### Install Dependencies
 
-To run the project, you'll need:
+To run the entire application, you'll need:
 
-* [Git](https://git-scm.com) (or you could download the zip, but who does that?)
+* [Git](https://git-scm.com) (or you could download a zip of the source code, but who does that?)
 * [Docker](https://docker.com)
 * [Kubernetes](https://kubernetes.io/) with
   [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/)
-
-### Dev Dependencies
-
-If you want to develop with an editor that understands the project, you'll
-probably also want:
-
-* [Go Lang](https://golang.org)
-* [Flutter](https://github.com/flutter/flutter)
 
 ### Get the Source Code
 
@@ -81,24 +113,4 @@ kubectl delete services/chatter-{frontend,rooms}-service \
     deployment.apps/chatter-{frontend,rooms}-deployment \
     ingress/chatter-ingress
 minikube stop
-```
-
-### Local development
-
-An editor like Visual Studio Code won't use Intellisense based on the Docker build.
-You'll need to build the project locally (outside of Docker) for many editor features to work.
-
-```bash
-# Build client manually.
-(cd client && flutter build web)
-
-# Test client.
-# Note: This only runs non-UI tests because Flutter Web testing isn't well supported atm.
-(cd client && flutter packages pub run test)
-
-# Run server manually.
-go run server/server.go
-
-# Test server.
-go test ./...
 ```

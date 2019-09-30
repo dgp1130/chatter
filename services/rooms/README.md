@@ -2,6 +2,10 @@
 
 The rooms server for Chatter which provides functionality to create and list chat rooms.
 
+## Useful links
+
+* [Docker Hub Image](https://hub.docker.com/r/dgp1130/chatter-rooms-service)
+
 ## Build and run the service
 
 (Executed from project root, not `services/rooms/`).
