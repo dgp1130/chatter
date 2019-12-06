@@ -109,8 +109,9 @@ echo -e "$(minikube ip)\tdev.chatter.technology" | sudo tee -a /etc/hosts > /dev
 sensible-browser dev.chatter.technology
 
 # Stop Kubernetes.
-kubectl delete services/chatter-{frontend,rooms}-service \
-    deployment.apps/chatter-{frontend,rooms}-deployment \
-    ingress/chatter-ingress
+kubectl delete services/chatter-{frontend,rooms,db}-service \
+    deployment.apps/chatter-{frontend,rooms,db}-deployment \
+    ingress/chatter-ingress \
+    pv/chatter-db-volume pvc/chatter-db-claim
 minikube stop
 ```

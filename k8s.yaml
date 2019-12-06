@@ -137,5 +137,47 @@ spec:
       containers:
       - name: master
         image: redis
+        args: [
+          "--save", "3600", "1", "300", "100", "60", "10000",
+          "--appendonly", "yes",
+        ]
         ports:
         - containerPort: 6379
+        volumeMounts:
+        - name: chatter-db-storage
+          mountPath: /data/
+      volumes:
+      - name: chatter-db-storage
+        persistentVolumeClaim:
+          claimName: chatter-db-claim
+
+---
+
+# Persistent database volume.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: chatter-db-volume
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 10Mi
+  hostPath:
+    path: /mnt/minikube/volumes/chatter-db-volume/
+
+---
+
+# Persistent database volume claim.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: chatter-db-claim
+spec:
+  storageClassName: manual
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
