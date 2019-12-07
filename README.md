@@ -97,9 +97,9 @@ docker save dgp1130/chatter-rooms-service | (eval $(minikube docker-env) && dock
 
 # Apply Kubernetes configuration while only using local images.
 # NOTE: By default this will likely pull images from Docker Hub rather than using the local ones
-# just pushed. You probably want to edit k8s.yaml to specify `imagePullPolicy: Never` on the
-# deployment configurations before running this step.
-kubectl apply -f k8s.yaml
+# just pushed. You probably want to edit deployments/app.yaml to specify `imagePullPolicy: Never` on
+# the deployment configurations before running this step.
+kubectl apply -f deployments/minikube/
 
 # Add Minikube IP to /etc/hosts. The application *must* be opened with a *.chatter.technology domain
 # or else the nginx ingress will not route requests correctly.
@@ -114,4 +114,13 @@ kubectl delete services/chatter-{frontend,rooms,db}-service \
     ingress/chatter-ingress \
     pv/chatter-db-volume pvc/chatter-db-claim
 minikube stop
+```
+
+## Deployment
+
+Since the Kubernetes configs for Minikube and GKE differ slightly, there a separate infrastructure
+module to be used. To deploy to GKE, simply run:
+
+```bash
+kubectl apply -f deployment/gke/
 ```

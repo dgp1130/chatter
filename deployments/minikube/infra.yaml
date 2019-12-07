@@ -1,0 +1,30 @@
+# Kubernetes infrastructure configuration specific to Minikube.
+
+# Persistent database volume claim.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: chatter-db-claim
+spec:
+  storageClassName: manual
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+
+---
+
+# Persistent database volume.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: chatter-db-volume
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 10Mi
+  hostPath:
+    path: /mnt/minikube/volumes/chatter-db-volume/

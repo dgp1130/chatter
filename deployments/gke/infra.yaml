@@ -1,0 +1,26 @@
+# Kubernetes infrastructure configuration specific to
+# Google Kubernetes Engine (GKE).
+
+# Persistent database volume claim.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: chatter-db-claim
+spec:
+  storageClassName: chatter-db-storage-class
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+
+---
+
+# Database storage class
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+    name: chatter-db-storage-class
+provisioner: kubernetes.io/gce-pd
+parameters:
+    type: pd-ssd

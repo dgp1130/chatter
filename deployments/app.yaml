@@ -1,3 +1,7 @@
+# Common Kubernetes configuration for the Chatter application.
+# Should not include any configuration specific to particular
+# infrastructure implementation such as Minkube or GKE.
+
 # Ingress
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -116,7 +120,7 @@ spec:
 
 ---
 
-# Database service-deployment.
+# Database service deployment.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -149,35 +153,11 @@ spec:
       volumes:
       - name: chatter-db-storage
         persistentVolumeClaim:
+          # Storage class differs between Minikube and GKE environments.
           claimName: chatter-db-claim
 
----
-
-# Persistent database volume.
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: chatter-db-volume
-spec:
-  storageClassName: manual
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 10Mi
-  hostPath:
-    path: /mnt/minikube/volumes/chatter-db-volume/
+        # gcePersistentDisk:
+        #   pdName: chatter-db-disk
+        #   fsType: ext4
 
 ---
-
-# Persistent database volume claim.
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: chatter-db-claim
-spec:
-  storageClassName: manual
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Mi
