@@ -153,11 +153,7 @@ spec:
       volumes:
       - name: chatter-db-storage
         persistentVolumeClaim:
-          # Storage class differs between Minikube and GKE environments.
+          # Claim implementation differs between Minikube and GKE environments.
           claimName: chatter-db-claim
-
-        # gcePersistentDisk:
-        #   pdName: chatter-db-disk
-        #   fsType: ext4
 
 ---
