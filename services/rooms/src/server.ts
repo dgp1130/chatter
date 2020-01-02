@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import RoomsApi from './api/rooms';
-import {simpleResponder} from './utils/simple_responder';
+import * as rooms from './api/rooms';
+import { simpleResponder } from './utils/simple_responder';
 
 const app = express();
 
@@ -9,9 +9,8 @@ const app = express();
 app.use(bodyParser.json());
 
 // Bind Rooms API route handlers.
-const rooms = new RoomsApi();
-app.post('/api/rooms/create', simpleResponder(rooms.create.bind(rooms)));
-app.get('/api/rooms/list', simpleResponder(rooms.list.bind(rooms)));
+app.post('/api/rooms/create', simpleResponder(rooms.create));
+app.get('/api/rooms/list', simpleResponder(rooms.list));
 
 // Begin listening for requests.
 const port = process.env.PORT || 80;

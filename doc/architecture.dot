@@ -15,8 +15,10 @@ digraph Architecture {
         "Nginx Ingress";
         "Frontend Service";
         "Rooms Service";
+        "Rooms Redis Store";
 
         "Nginx Ingress" -> "Frontend Service" [label="/*"];
         "Nginx Ingress" -> "Rooms Service" [label="/api/rooms/*"];
+        "Rooms Service" -> "Rooms Redis Store"
     }
 }

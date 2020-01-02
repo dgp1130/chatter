@@ -1,64 +1,50 @@
-import {Request, Response} from 'express';
+import { Request } from 'express';
 import * as HttpStatus from 'http-status-codes';
-import Room from '../models/room';
 import SimpleResponse from '../models/simple_response';
-import { stringify } from 'querystring';
+import * as roomsDb from '../services/rooms_db_client';
 
-/** Container of local state related to the Rooms API. */
-export default class RoomsApi {
-    /**
-     * The ID to use for the next room, stored statically to apply across all
-     * requests. This is temporary until rooms are stored in a proper database.
-     */
-    private nextRoomId: number = 0;
-    private rooms: Room[] = [];
-
-    /** Creates a room with the given information. */
-    public create(req: Request): SimpleResponse {
-        // Parse name from request, aborting on any input errors.
-        let name: string;
-        try {
-            name = parseName(req.body);
-        } catch (err) {
-            if (err instanceof IllegalArgumentError) {
-                return new SimpleResponse({
-                    status: HttpStatus.BAD_REQUEST,
-                    body: err.message,
-                });
-            } else {
-                throw err;
-            }
+/** Creates a room with the given information. */
+export async function create(req: Request): Promise<SimpleResponse> {
+    // Parse name from request, aborting on any input errors.
+    let name: string;
+    try {
+        name = parseName(req.body);
+    } catch (err) {
+        if (err instanceof IllegalArgumentError) {
+            return new SimpleResponse({
+                status: HttpStatus.BAD_REQUEST,
+                body: err.message,
+            });
+        } else {
+            throw err;
         }
-
-        // Create a new Room with a clean ID and the given name.
-        const id = this.nextRoomId++;
-        const room = new Room({id, name});
-        this.rooms.push(room);
-        
-        // Respond with new Room as JSON.
-        return new SimpleResponse({
-            status: HttpStatus.CREATED,
-            contentType: 'application/json',
-            body: JSON.stringify(
-                room.serialize(),
-                null /* replacer */,
-                4 /* spaces per tab */,
-            ),
-        });
     }
 
-    /** Lists all available rooms. */
-    public list(req: Request): SimpleResponse {
-        return new SimpleResponse({
-            status: HttpStatus.OK,
-            contentType: 'application/json',
-            body: JSON.stringify(
-                this.rooms.map((room) => room.serialize()),
-                null /* replacer */,
-                4 /* spaces per tab */,
-            ),
-        });
-    }
+    // Create the room in backend database.
+    const room = await roomsDb.create(name);
+
+    // Respond with new Room as JSON.
+    return new SimpleResponse({
+        status: HttpStatus.CREATED,
+        contentType: 'application/json',
+        body: JSON.stringify(room.serialize(), null /* replacer */, 4 /* tabSize */),
+    });
+}
+
+/** Lists all available rooms. */
+export async function list(): Promise<SimpleResponse> {
+    // Read all rooms in the backend database.
+    const rooms = await roomsDb.list();
+
+    return new SimpleResponse({
+        status: HttpStatus.OK,
+        contentType: 'application/json',
+        body: JSON.stringify(
+            rooms.map((room) => room.serialize()),
+            null /* replacer */,
+            4 /* spaces per tab */,
+        ),
+    });
 }
 
 // Safely parses the "name" field out of unsanitized JSON.

@@ -43,16 +43,16 @@ find them in the future.
 
 ![Architecture Diagram](https://g.gravizo.com/source/svg?https://raw.githubusercontent.com/dgp1130/chatter/master/doc/architecture.dot)
 
+### Services
+
+* [Frontend](services/frontend/README.md)
+* [Rooms](services/rooms/README.md)
+
 ## Development
 
 Most development should be done on a service-by-service basis, so most of the time you only need to
 run a single service and develop against that directly. Each service should have its own
 documentation defining how it works and how to develop against it.
-
-### Services
-
-* [Frontend](services/frontend/README.md)
-* [Rooms](services/rooms/README.md)
 
 ## Running the Entire Application
 

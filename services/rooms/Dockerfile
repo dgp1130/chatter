@@ -1,4 +1,4 @@
-FROM node:10-slim as tsc
+FROM node:11-slim as tsc
 
 RUN npm install -g typescript
 
@@ -22,6 +22,10 @@ RUN tsc
 FROM build as test
 
 ENTRYPOINT ["npm", "test"]
+
+FROM build as test-debug
+
+ENTRYPOINT ["npm", "run", "test:debug"]
 
 FROM build as server
 
