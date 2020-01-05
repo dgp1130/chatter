@@ -1,0 +1,11 @@
+# Don't include external Docker artifacts.
+docker-compose.yaml
+
+# Don't include IDE configurations.
+.vscode/
+
+# Don't include locally generated build files.
+client/build/
+client/.dart_tool/
+client/.packages
+**/node_modules/

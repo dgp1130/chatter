@@ -3,9 +3,32 @@
 The frontend server for Chatter which serves the raw HTML/JavaScript/CSS Angular bundles to end-user
 devices. It is a very "dumb" server, simply serving pre-built static files.
 
-## Building locally
+## Local development with Docker
 
-To build/run/test the client side application without using Docker, you will need to install the
+Docker is the easiest way to build/run/test the application because it does not require external
+dependencies on your developer machine. The only installations needed are
+[Docker](https://docker.com) and [docker-compose](https://docs.docker.com/compose/)
+
+### Development environment
+
+To start a development environment, run the following command:
+
+```shell
+docker-compose up --build dev
+```
+
+Note: If you want to run this command from repository root, rather than `services/ng-frontend/`, you
+can include `-f services/ng-frontend/docker-compose.yaml`.
+
+This will bring up a development server on port 4200. You can view the app by visiting
+[http://localhost:4200/](http://localhost:4200/).
+
+This supports live reload and will automatically rebuild and refresh the page when a file is edited.
+You may need to restart the server when NPM dependencies are modified.
+
+## Local development without Docker
+
+To build/run/test the client side application **without** using Docker, you will need to install the
 [Angular CLI](https://github.com/angular/angular-cli).
 
 ### Development server
