@@ -37,3 +37,10 @@ services:
             - '/chatter/services/ng-frontend/node_modules/'
         ports:
             - '9876:9876'
+
+    # Run end-to-end tests.
+    e2e:
+        container_name: chatter-ng-frontend-e2e
+        build:
+            context: .
+            target: e2e

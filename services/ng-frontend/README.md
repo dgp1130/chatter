@@ -47,6 +47,34 @@ docker-compose up --build test-debug
 This will run unit tests and watch source files to rerun tests on any change. To debug, open a
 browser to [http://localhost:9876/debug.html](http://localhost:9876/debug.html).
 
+### Running end-to-end (e2e) tests
+
+To execute end-to-end tests locally, run:
+
+```shell
+docker-compose up --build e2e
+```
+
+There is no great way to debug end-to-end tests using Docker (see
+[this issue](https://github.com/angular/angular-cli/issues/16683)). As a result, debugging needs to
+be done directly with local installs of the relevant tools. To debug end-to-end tests locally, start
+by opening dedicated DevTools for Node by visiting [chrome://inspect](chrome://inspect) (make sure
+it is watching port 9229). Then, add a `debugger;` statement in the test you are interested in and
+run:
+
+```shell
+# Run a dev instance
+docker-compose up --build dev
+
+# In new terminal tab....
+
+# Run Protractor with relevant debug arguments.
+npm run e2e-debug
+```
+
+This will run the test and break at the `debugger;` statement. You can then step around, add more
+breakpoints, and inspect local variables.
+
 ## Local development without Docker
 
 To build/run/test the client side application **without** using Docker, you will need to install the

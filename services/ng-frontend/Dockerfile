@@ -43,3 +43,13 @@ WORKDIR /chatter/services/ng-frontend/
 
 CMD [ "npm", "run", "test-debug" ]
 EXPOSE 9876
+
+# Execute end-to-end tests.
+FROM install as e2e
+
+# Install ps command for Protractor.
+RUN apt-get install -y procps
+
+WORKDIR /chatter/services/ng-frontend/
+
+CMD [ "npm", "run", "e2e" ]
