@@ -3,7 +3,7 @@ version: '3.6'
 services:
     # Run service for local development.
     dev:
-        container_name: chatter-ng-frontend
+        container_name: chatter-ng-frontend-dev
         build:
             context: .
             target: dev
@@ -15,6 +15,15 @@ services:
             - '/chatter/services/ng-frontend/node_modules/'
         ports:
             - '4200:4200'
+
+    # Run production server.
+    prod:
+        container_name: chatter-ng-frontend-prod
+        build:
+            context: .
+            target: prod
+        ports:
+            - '8000:80'
 
     # Run unit tests (not e2e).
     test:

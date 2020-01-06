@@ -17,6 +17,7 @@ WORKDIR /chatter/services/ng-frontend/
 COPY package.json .
 COPY package-lock.json .
 RUN npm install
+ENV PATH "/chatter/services/ng-frontend/node_modules/.bin/:${PATH}"
 
 # Copy rest of the source code.
 COPY . .
@@ -53,3 +54,20 @@ RUN apt-get install -y procps
 WORKDIR /chatter/services/ng-frontend/
 
 CMD [ "npm", "run", "e2e" ]
+
+# Production build of Angular app.
+FROM install as prod-build
+
+WORKDIR /chatter/services/ng-frontend/
+
+RUN ng build --prod --output-path=dist/
+
+# Production server.
+FROM nginx:1.16.0-alpine as prod
+
+# Copy build artifacts to Nginx's serve directory.
+COPY --from=prod-build /chatter/services/ng-frontend/dist/ /usr/share/nginx/html/
+
+# Run nginx without a daemon so it plays nicer with Docker.
+CMD [ "nginx", "-g", "daemon off;" ]
+EXPOSE 80
