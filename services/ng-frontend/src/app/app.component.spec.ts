@@ -1,4 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
+import { MatToolbarModule } from '@angular/material';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 
@@ -6,10 +7,11 @@ describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        MatToolbarModule,
+        RouterTestingModule,
       ],
       declarations: [
-        AppComponent
+        AppComponent,
       ],
     }).compileComponents();
   }));
@@ -26,6 +28,6 @@ describe('AppComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('div').textContent).toContain('Hello, Chatter!');
+    expect(compiled.querySelector('mat-toolbar').textContent).toContain('Chatter');
   });
 });
