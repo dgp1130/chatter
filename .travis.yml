@@ -5,8 +5,12 @@ services:
 
 before_install:
   - docker build -f services/frontend/Dockerfile -t dgp1130/chatter-frontend-test . --target test
+  - docker build -f services/ng-frontend/Dockerfile -t dgp1130/chatter-ng-frontend-test services/ng-frontend/ --target test
+  - docker build -f services/ng-frontend/Dockerfile -t dgp1130/chatter-ng-frontend-e2e services/ng-frontend/ --target e2e
   - docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-test . --target test
 
 script:
   - docker run --rm -it -t dgp1130/chatter-frontend-test
+  - docker run --rm -it -t dgp1130/chatter-ng-frontend-test
+  - docker run --rm -it -t dgp1130/chatter-ng-frontend-e2e
   - docker run --rm -it -t dgp1130/chatter-rooms-test
