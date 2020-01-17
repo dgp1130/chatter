@@ -3,6 +3,8 @@
 The frontend server for Chatter which serves the raw HTML/JavaScript/CSS Angular bundles to end-user
 devices. It is a very "dumb" server, simply serving pre-built static files.
 
+Test files are identified by the `*.spec.ts` suffix in their file names.
+
 ## Local development with Docker
 
 Docker is the easiest way to build/run/test the application because it does not require external
@@ -25,6 +27,25 @@ This will bring up a development server on port 4200. You can view the app by vi
 
 This supports live reload and will automatically rebuild and refresh the page when a file is edited.
 You may need to restart the server when NPM dependencies are modified.
+
+### Running unit tests
+
+To execute tests, run:
+
+```shell
+docker-compose up --build test
+```
+
+This will run unit tests once and print their output to the console.
+
+If you want to debug failing tests, run:
+
+```shell
+docker-compose up --build test-debug
+```
+
+This will run unit tests and watch source files to rerun tests on any change. To debug, open a
+browser to [http://localhost:9876/debug.html](http://localhost:9876/debug.html).
 
 ## Local development without Docker
 

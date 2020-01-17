@@ -15,3 +15,25 @@ services:
             - '/chatter/services/ng-frontend/node_modules/'
         ports:
             - '4200:4200'
+
+    # Run unit tests (not e2e).
+    test:
+        container_name: chatter-ng-frontend-test
+        build:
+            context: .
+            target: test
+
+    # Debug unit tests (not e2e) locally.
+    test-debug:
+        container_name: chatter-ng-frontend-test-debug
+        build:
+            context: .
+            target: test-debug
+        volumes:
+            # Bind source code for live reload when source files are edited.
+            - '.:/chatter/services/ng-frontend/'
+            # Bind anonymous volume at node_modules/ so it uses the version built by Docker, rather
+            # than the host version of dependencies.
+            - '/chatter/services/ng-frontend/node_modules/'
+        ports:
+            - '9876:9876'

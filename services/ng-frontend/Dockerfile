@@ -1,5 +1,14 @@
+# Image with Chrome to be able execute tests with it.
+FROM node:12-slim as chrome
+
+# Install Chrome to execute tests.
+RUN apt-get update && apt-get install -y wget gnupg2
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+RUN apt-get update && apt-get install -yq google-chrome-stable
+
 # Installs the Angular application and includes all source files.
-FROM node:12-slim as install
+FROM chrome as install
 
 WORKDIR /chatter/services/ng-frontend/
 
@@ -19,3 +28,18 @@ FROM install as dev
 # port forwarding, so Angular doesn't know it is only ever accessed locally.
 CMD [ "npm", "start", "--", "--host", "0.0.0.0" ]
 EXPOSE 4200
+
+# Execute unit tests.
+FROM install as test
+
+WORKDIR /chatter/services/ng-frontend/
+
+CMD [ "npm", "test" ]
+
+# Debug unit tests.
+FROM install as test-debug
+
+WORKDIR /chatter/services/ng-frontend/
+
+CMD [ "npm", "run", "test-debug" ]
+EXPOSE 9876
