@@ -14,3 +14,8 @@ script:
   - docker run --rm -it -t dgp1130/chatter-ng-frontend-test
   - docker run --rm -it -t dgp1130/chatter-ng-frontend-e2e
   - docker run --rm -it -t dgp1130/chatter-rooms-test
+
+notifications:
+  email:
+    recipients:
+      - chatter-technology+ci@googlegroups.com

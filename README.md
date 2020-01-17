@@ -38,6 +38,8 @@ find them in the future.
 * [Docker Hub author](https://hub.docker.com/u/dgp1130)
 * [Continuous Integration](https://travis-ci.com/dgp1130/chatter)
   * [Configuration file](.travis.yml)
+* [Chatter Google Group](https://groups.google.com/forum/#!forum/chatter-technology)
+  * This owns the mailing list for managing automated emails.
 
 ## Architecture
 
