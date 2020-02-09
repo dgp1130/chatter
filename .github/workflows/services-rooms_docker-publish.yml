@@ -19,7 +19,7 @@ jobs:
     - name: Build image
       run: docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-service:latest --target server services/rooms
     - name: Save image to TAR
-      run: docker save -o chatter-rooms-service.tar
+      run: docker save -o chatter-rooms-service.tar dgp1130/chatter-rooms-service:latest
     - name: Upload image artifact
       uses: actions/upload-artifact@v1
       with:
