@@ -5,6 +5,15 @@ import * as roomsDb from '../services/rooms_db_client';
 
 /** Creates a room with the given information. */
 export async function create(req: Request): Promise<SimpleResponse> {
+    // Content-Type must be 'application/json' for Express to parse JSON body correctly.
+    const contentType = req.get('Content-Type');
+    if (contentType !== 'application/json') {
+        return new SimpleResponse({
+            status: HttpStatus.BAD_REQUEST,
+            body: `Request Content-Type (${contentType}) *must* be set to "application/json".`,
+        });
+    }
+
     // Parse name from request, aborting on any input errors.
     let name: string;
     try {

@@ -4,6 +4,7 @@ import { Request } from 'express';
 import * as HttpStatus from 'http-status-codes';
 import * as rooms from './rooms';
 import * as roomsDb from '../services/rooms_db_client';
+import RequestFake from '../testing/request_fake';
 import Room from '../models/room';
 
 describe('rooms', () => {
@@ -14,11 +15,14 @@ describe('rooms', () => {
                 name: 'foo',
             })));
 
-            const res = await rooms.create({
+            const res = await rooms.create(new RequestFake({
+                headers: new Map([
+                    [ 'Content-Type', 'application/json' ],
+                ]),
                 body: {
                     name: 'foo',
                 },
-            } as Request);
+            }).asRequest());
 
             expect(roomsDb.create).toHaveBeenCalledWith('foo');
 
@@ -33,10 +37,31 @@ describe('rooms', () => {
             });
         });
 
+        it('responds HTTP Bad Request with specific error when not given JSON Content-Type',
+                async () => {
+            spyOn(roomsDb, 'create');
+
+            const res = await rooms.create(new RequestFake({
+                headers: new Map([
+                    [ 'Content-Type', 'application/x-www-form-urlencoded' ], // Not application/json.
+                ]),
+            }).asRequest());
+
+            expect(roomsDb.create).not.toHaveBeenCalled();
+
+            expect(res.status).toBe(HttpStatus.BAD_REQUEST);
+            expect(res.body).toBe('Request Content-Type (application/x-www-form-urlencoded) *must*'
+                    + ' be set to "application/json".');
+        });
+
         it('responds HTTP Bad Request when no body is given', async () => {
             spyOn(roomsDb, 'create');
 
-            const res = await rooms.create({} as Request);
+            const res = await rooms.create(new RequestFake({
+                headers: new Map([
+                    [ 'Content-Type', 'application/json' ],
+                ]),
+            }).asRequest());
 
             expect(roomsDb.create).not.toHaveBeenCalled();
 
@@ -46,9 +71,12 @@ describe('rooms', () => {
         it('responds HTTP Bad Request when body is not a JSON object', async () => {
             spyOn(roomsDb, 'create');
 
-            const res = await rooms.create({
+            const res = await rooms.create(new RequestFake({
+                headers: new Map([
+                    [ 'Content-Type', 'application/json' ],
+                ]),
                 body: 'test',
-            } as Request);
+            }).asRequest());
 
             expect(roomsDb.create).not.toHaveBeenCalled();
 
@@ -58,11 +86,14 @@ describe('rooms', () => {
         it('responds HTTP Bad Request when not given a "name" field', async () => {
             spyOn(roomsDb, 'create');
 
-            const res = await rooms.create({
+            const res = await rooms.create(new RequestFake({
+                headers: new Map([
+                    [ 'Content-Type', 'application/json' ],
+                ]),
                 body: {
                     foo: 'bar',
                 },
-            } as Request);
+            }).asRequest());
 
             expect(roomsDb.create).not.toHaveBeenCalled();
 
@@ -72,45 +103,60 @@ describe('rooms', () => {
         it('responds HTTP Bad Request when not given a string "name" field', async () => {
             spyOn(roomsDb, 'create');
 
-            const booleanRes = await rooms.create({
+            const booleanRes = await rooms.create(new RequestFake({
+                headers: new Map([
+                    [ 'Content-Type', 'application/json' ],
+                ]),
                 body: {
                     name: true,
                 },
-            } as Request);
+            }).asRequest());
             expect(roomsDb.create).not.toHaveBeenCalled();
             expect(booleanRes.status).toBe(HttpStatus.BAD_REQUEST);
             
-            const numberRes = await rooms.create({
+            const numberRes = await rooms.create(new RequestFake({
+                headers: new Map([
+                    [ 'Content-Type', 'application/json' ],
+                ]),
                 body: {
                     name: 5,
                 },
-            } as Request);
+            }).asRequest());
             expect(roomsDb.create).not.toHaveBeenCalled();
             expect(numberRes.status).toBe(HttpStatus.BAD_REQUEST);
             
-            const nullRes = await rooms.create({
+            const nullRes = await rooms.create(new RequestFake({
+                headers: new Map([
+                    [ 'Content-Type', 'application/json' ],
+                ]),
                 body: {
                     name: null,
                 },
-            } as Request);
+            }).asRequest());
             expect(roomsDb.create).not.toHaveBeenCalled();
             expect(nullRes.status).toBe(HttpStatus.BAD_REQUEST);
 
-            const objRes = await rooms.create({
+            const objRes = await rooms.create(new RequestFake({
+                headers: new Map([
+                    [ 'Content-Type', 'application/json' ],
+                ]),
                 body: {
                     name: {
                         foo: 'bar',
                     },
                 },
-            } as Request);
+            }).asRequest());
             expect(roomsDb.create).not.toHaveBeenCalled();
             expect(objRes.status).toBe(HttpStatus.BAD_REQUEST);
 
-            const listRes = await rooms.create({
+            const listRes = await rooms.create(new RequestFake({
+                headers: new Map([
+                    [ 'Content-Type', 'application/json' ],
+                ]),
                 body: {
                     name: ['foo', 'bar', 'baz'],
                 },
-            } as Request);
+            }).asRequest());
             expect(roomsDb.create).not.toHaveBeenCalled();
             expect(listRes.status).toBe(HttpStatus.BAD_REQUEST);
         });
