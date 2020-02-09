@@ -48,7 +48,8 @@ find them in the future.
 ### Services
 
 * [Frontend](services/frontend/README.md)
-* [Rooms](services/rooms/README.md)
+* [Angular Frontend](services/ng-frontend/README.md)
+* [Rooms](services/rooms/README.md) ![Deployment](https://github.com/dgp1130/chatter/workflows/Docker%20Publish%20Rooms%20Service/badge.svg)
 
 ## Development
 

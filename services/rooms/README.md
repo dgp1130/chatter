@@ -1,5 +1,7 @@
 # Chatter Rooms Service
 
+![Deployment](https://github.com/dgp1130/chatter/workflows/Docker%20Publish%20Rooms%20Service/badge.svg)
+
 The rooms server for Chatter which provides functionality to create and list chat rooms.
 
 ## Useful links
