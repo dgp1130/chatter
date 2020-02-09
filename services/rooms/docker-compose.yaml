@@ -1,0 +1,35 @@
+version: '3.6'
+
+services:
+    # Run service for local development.
+    dev:
+        container_name: chatter-rooms-dev
+        build:
+            context: .
+            target: server
+        ports:
+            - '8000:80'
+        environment:
+            - CHATTER_DB_SERVICE_SERVICE_HOST=redis
+        links:
+            - redis
+
+    # Backend data store for local development.
+    redis:
+        image: redis
+
+    # Run unit tests.
+    test:
+        container_name: chatter-rooms-test
+        build:
+            context: .
+            target: test
+
+    # Debug unit tests locally.
+    test-debug:
+        container_name: chatter-rooms-test-debug
+        build:
+            context: .
+            target: test-debug
+        ports:
+            - '9229:9229' # Chrome Node debugging port.

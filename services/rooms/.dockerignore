@@ -1,0 +1,5 @@
+# Don't include external Docker artifacts.
+docker-compose.yaml
+
+# Don't include locally generated build files.
+**/node_modules/

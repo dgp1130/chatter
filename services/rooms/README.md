@@ -6,33 +6,30 @@ The rooms server for Chatter which provides functionality to create and list cha
 
 * [Docker Hub Image](https://hub.docker.com/r/dgp1130/chatter-rooms-service)
 
-## Build and run the service
+## Local development with Docker
 
-This service is dependent on a backend Redis data store. The backend must be started and running
-on the same network.
+Docker is the easiest way to build/run/test the service because it does not require external
+dependencies on your developer machine. The only installations needed are
+[Docker](https://docker.com) and [docker-compose](https://docs.docker.com/compose/)
 
-(Executed from project root, not `services/rooms/`).
+### Development environment
 
-```bash
-# Create a network to run both containers on.
-docker network create --driver bridge chatter
+To start a development environment, run the following command:
 
-# Start the Redis instance on the network with the DNS name `redis`.
-docker run --rm -it -t --net chatter --name redis redis
-
-# In a new tab:
-# Build and run the rooms service and connect to the development Redis instance.
-docker build -f services/rooms/Dockerfile --rm -t chatter-rooms-service . \
-    && docker run --rm -it -t -p 8000:80 --net chatter \
-        -e CHATTER_DB_SERVICE_SERVICE_HOST="redis" \
-        chatter-rooms-service
+```shell
+docker-compose up --build dev
 ```
 
-## Manually test APIs
+Note: If you want to run this command from repository root, rather than `services/rooms/`, you
+can include `-f services/rooms/docker-compose.yaml`.
 
-There are two APIs currently supported.
+This will bring up a development server on port 8000 and a local database.
 
-### `/api/rooms/create`
+### Manually test APIs
+
+There are two API endpoints currently supported.
+
+#### `/api/rooms/create`
 
 A room can be created by making a `POST` request to `/api/rooms/create`. It accepts a JSON body with
 the `name` value set to a string. Make sure to include the content type as `application/json`, as
@@ -45,7 +42,7 @@ curl -X POST localhost:8000/api/rooms/create \
 
 ```
 
-### `/api/rooms/list`
+#### `/api/rooms/list`
 
 All created rooms can be listed by making a `GET` request to `/api/rooms/list`. Any previously
 created rooms should be returned here.
@@ -56,22 +53,18 @@ curl localhost:8000/api/rooms/list
 
 ## Run tests
 
-(Executed from project root, not `services/rooms/`).
-
 ```bash
-docker build -f services/rooms/Dockerfile --rm -t chatter-rooms-test . --target test \
-    && docker run --rm -it -t chatter-rooms-test
+docker-compose up --build test
 ```
 
 ### Debug tests
 
 To open a debugger when running tests, you can add a `debugger;` statement in the file you are
 interested in. In Chrome, go to [chrome://inspect](chrome://inspect) and select "Open Dedicated
-DevTools for Node". Finally, run (from project root, not `services/rooms/`):
+DevTools for Node". Finally, run:
 
-```bash
-docker build -f services/rooms/Dockerfile --rm -t chatter-rooms-test-debug . --target test-debug \
-    && docker run --rm -it -p 9229:9229 -t chatter-rooms-test-debug
+```shell
+docker-compose up --build test-debug
 ```
 
 This should automatically connect to the Chrome DevTools window and break on the `debugger;`
@@ -113,7 +106,7 @@ after creation/last message sent. However this is not currently implemented in t
 key. Clients accessing this value must manually limit their search to the last 24 hours or they risk
 reading room IDs which are no longer accessible via `rooms.byId.${id}`.
 
-In the future, a batch job may run to garbage collect dead rooms from the store.
+In the future, a batch job may run to garbage collect dead room IDs from the store.
 
 ```text
 rooms.currId
