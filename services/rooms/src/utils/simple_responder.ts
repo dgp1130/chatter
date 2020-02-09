@@ -34,9 +34,11 @@ export function simpleResponder(handler: (req: Request) => SimpleResponse|Promis
             ? await simpleResponseOrPromise
             : simpleResponseOrPromise;
 
-        res.status(simpleResponse.status)
-            .contentType(simpleResponse.contentType)
-            .end(simpleResponse.body);
+        res.status(simpleResponse.status);
+        for (const [key, value] of simpleResponse.headers) {
+            res.header(key, value);
+        }
+        res.end(simpleResponse.body);
     });
 }
 

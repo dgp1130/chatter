@@ -12,11 +12,14 @@ describe('ResponseFake', () => {
         });
     });
 
-    describe('contentType()', () => {
-        it('stores the argument in the `contentTypeValue` field', () => {
+    describe('header()', () => {
+        it('stores the argument in the `headerValues` field', () => {
             const res = new ResponseFake();
-            res.contentType('text/plain');
-            expect(res.contentTypeValue).toBe('text/plain');
+            res.header('X-Foo', 'Bar').header('X-Bar', 'Foo');
+            expect(res.headerValues).toEqual(new Map([
+                [ 'X-Foo', 'Bar' ],
+                [ 'X-Bar', 'Foo' ],
+            ]));
         });
     });
     

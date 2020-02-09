@@ -13,9 +13,9 @@ export default class ResponseFake {
         return this;
     }
 
-    public contentTypeValue?: string;
-    public contentType(contentType: string): this {
-        this.contentTypeValue = contentType;
+    public headerValues = new Map<string, string>();
+    public header(key: string, value: string): this {
+        this.headerValues.set(key, value);
         return this;
     }
 

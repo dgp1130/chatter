@@ -8,21 +8,31 @@ describe('SimpleResponse', () => {
         it('constructs the SimpleResponse', () => {
             const res = new SimpleResponse({
                 status: HttpStatus.OK,
-                contentType: 'text/html',
                 body: '<div>Hello World!</div>',
+                headers: new Map([
+                    [ 'Content-Type', 'text/html' ],
+                    [ 'X-Foo', 'Bar' ],
+                ]),
             });
 
             expect(res.status).toBe(HttpStatus.OK);
-            expect(res.contentType).toBe('text/html');
             expect(res.body).toBe('<div>Hello World!</div>');
+            expect(res.headers).toEqual(new Map([
+                [ 'Content-Type', 'text/html' ],
+                [ 'X-Foo', 'Bar' ],
+            ]))
+            expect(res.contentType).toBe('text/html');
         });
 
         it('defaults to empty response', () => {
             const res = new SimpleResponse();
 
             expect(res.status).toBe(HttpStatus.OK);
-            expect(res.contentType).toBe('text/plain');
             expect(res.body).toBe('');
+            expect(res.headers).toEqual(new Map([
+                [ 'Content-Type', 'text/plain' ],
+            ]));
+            expect(res.contentType).toBe('text/plain');
         });
     });
 });

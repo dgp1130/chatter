@@ -13,8 +13,10 @@ describe('simple_responder', () => {
                 async () => {
             const handler = jasmine.createSpy('handler').and.returnValue(new SimpleResponse({
                 status: HttpStatus.OK,
-                contentType: 'text/plain',
                 body: 'Hello World!',
+                headers: new Map([
+                    [ 'Content-Type', 'text/plain' ],
+                ]),
             }));
             const responder = simpleResponder(handler);
 
@@ -28,7 +30,9 @@ describe('simple_responder', () => {
             expect(err).toBeUndefined();
             
             expect(res.statusValue).toBe(HttpStatus.OK);
-            expect(res.contentTypeValue).toBe('text/plain');
+            expect(res.headerValues).toEqual(new Map([
+                [ 'Content-Type', 'text/plain' ],
+            ]));
             expect(res.endValue).toBe('Hello World!');
         });
 
@@ -37,8 +41,10 @@ describe('simple_responder', () => {
             const handler = jasmine.createSpy('handler')
                     .and.returnValue(Promise.resolve(new SimpleResponse({
                 status: HttpStatus.OK,
-                contentType: 'text/plain',
                 body: 'Hello World!',
+                headers: new Map([
+                    [ 'Content-Type', 'text/plain' ],
+                ]),
             })));
             const responder = simpleResponder(handler);
 
@@ -52,7 +58,9 @@ describe('simple_responder', () => {
             expect(err).toBeUndefined();
             
             expect(res.statusValue).toBe(HttpStatus.OK);
-            expect(res.contentTypeValue).toBe('text/plain');
+            expect(res.headerValues).toEqual(new Map([
+                [ 'Content-Type', 'text/plain' ],
+            ]));
             expect(res.endValue).toBe('Hello World!');
         });
 

@@ -26,8 +26,10 @@ export async function create(req: Request): Promise<SimpleResponse> {
     // Respond with new Room as JSON.
     return new SimpleResponse({
         status: HttpStatus.CREATED,
-        contentType: 'application/json',
         body: JSON.stringify(room.serialize(), null /* replacer */, 4 /* tabSize */),
+        headers: new Map([
+            [ 'Content-Type', 'application/json' ],
+        ]),
     });
 }
 
@@ -38,12 +40,14 @@ export async function list(): Promise<SimpleResponse> {
 
     return new SimpleResponse({
         status: HttpStatus.OK,
-        contentType: 'application/json',
         body: JSON.stringify(
             rooms.map((room) => room.serialize()),
             null /* replacer */,
             4 /* spaces per tab */,
         ),
+        headers: new Map([
+            [ 'Content-Type', 'application/json' ],
+        ]),
     });
 }
 
