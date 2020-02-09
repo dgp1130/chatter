@@ -23,7 +23,10 @@ describe('rooms', () => {
             expect(roomsDb.create).toHaveBeenCalledWith('foo');
 
             expect(res.status).toBe(HttpStatus.CREATED);
-            expect(res.contentType).toBe('application/json');
+            expect(res.headers).toEqual(new Map([
+                [ 'Content-Type', 'application/json' ],
+                [ 'Access-Control-Allow-Origin', '*' ],
+            ]));
             expect(JSON.parse(res.body)).toEqual({
                 id: 0,
                 name: 'foo',
@@ -122,7 +125,10 @@ describe('rooms', () => {
             expect(roomsDb.list).toHaveBeenCalledWith(/* nothing */);
 
             expect(res.status).toBe(HttpStatus.OK);
-            expect(res.contentType).toBe('application/json');
+            expect(res.headers).toEqual(new Map([
+                [ 'Content-Type', 'application/json' ],
+                [ 'Access-Control-Allow-Origin', '*' ],
+            ]));
             expect(JSON.parse(res.body)).toEqual([]);
         });
 
@@ -137,7 +143,10 @@ describe('rooms', () => {
             expect(roomsDb.list).toHaveBeenCalledWith(/* nothing */);
 
             expect(res.status).toBe(HttpStatus.OK);
-            expect(res.contentType).toBe('application/json');
+            expect(res.headers).toEqual(new Map([
+                [ 'Content-Type', 'application/json' ],
+                [ 'Access-Control-Allow-Origin', '*' ],
+            ]));
             expect(JSON.parse(res.body)).toEqual([{
                 id: 0,
                 name: 'foo',

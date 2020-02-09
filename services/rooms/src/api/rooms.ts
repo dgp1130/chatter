@@ -29,6 +29,7 @@ export async function create(req: Request): Promise<SimpleResponse> {
         body: JSON.stringify(room.serialize(), null /* replacer */, 4 /* tabSize */),
         headers: new Map([
             [ 'Content-Type', 'application/json' ],
+            [ 'Access-Control-Allow-Origin', '*' ],
         ]),
     });
 }
@@ -47,6 +48,7 @@ export async function list(): Promise<SimpleResponse> {
         ),
         headers: new Map([
             [ 'Content-Type', 'application/json' ],
+            [ 'Access-Control-Allow-Origin', '*' ],
         ]),
     });
 }
