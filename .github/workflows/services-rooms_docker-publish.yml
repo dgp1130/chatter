@@ -37,6 +37,6 @@ jobs:
       with:
         name: images
     - name: Load image from TAR
-      run: docker load -i images/chatter-room-service.tar
+      run: docker load -i images/chatter-rooms-service.tar
     - name: Publish
       run: docker push dgp1130/chatter-rooms-service:latest
