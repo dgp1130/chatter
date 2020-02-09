@@ -5,22 +5,26 @@ on:
     branches: master
 
 jobs:
+  login:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Login
+      run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
+
   build:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Build the Docker image
+    - name: Build image
       run: docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-service:latest --target server services/rooms
-
-  login:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Login
-      uses: azure/docker-login@v1
+    - name: Save image to TAR
+      run: docker save -o chatter-rooms-service.tar
+    - name: Upload image artifact
+      uses: actions/upload-artifact@v1
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+        name: images
+        path: chatter-rooms-service.tar
 
   publish:
     runs-on: ubuntu-latest
@@ -28,5 +32,11 @@ jobs:
     - build
     - login
     steps:
+    - name: Download image artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: images
+    - name: Load image from TAR
+      run: docker load -i images/chatter-room-service.tar
     - name: Publish
       run: docker push dgp1130/chatter-rooms-service:latest
