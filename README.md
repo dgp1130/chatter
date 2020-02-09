@@ -18,7 +18,7 @@ but I really just want to play with the technologies so I'm not that concerned w
 
 Some future work I hope to get around to at some point:
 
-* Figure out how persistent databases work in Kubernetes and set that up.
+* Switch from Flutter Web to Angular (just to learn a little more about the Angular dev experience).
 * Set up SSL.
 * Convert JSON endpoints to gRPC.
 * Create a development instance (`dev.chatter.technology`) for pre-production testing.
