@@ -2,13 +2,17 @@ import { TestBed, async } from '@angular/core/testing';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { RoomsModule } from 'src/app/rooms/rooms.module';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        HttpClientModule,
         MatToolbarModule,
         RouterTestingModule,
+        RoomsModule,
       ],
       declarations: [
         AppComponent,

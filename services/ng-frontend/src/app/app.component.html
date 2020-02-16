@@ -1,3 +1,16 @@
 <mat-toolbar color="primary">
   <span>Chatter</span>
 </mat-toolbar>
+
+<div [appAsyncObserve]="rooms$">
+  <ul *appAsyncObserveValue="let rooms = value">
+    <li *ngFor="let room of rooms">{{ room.name }}</li>
+  </ul>
+  <div *appAsyncObserveStartup>
+    Loading...
+  </div>
+  <div *appAsyncObserveError="let error = error">
+    Failed to list active rooms:
+    {{ error.message }}
+  </div>
+</div>
