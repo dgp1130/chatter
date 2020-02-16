@@ -90,7 +90,7 @@ minikube addons enable ingress
 
 # Build services.
 docker build -f services/frontend/Dockerfile -t dgp1130/chatter-frontend-service:latest .
-docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-service:latest .
+docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-service:latest services/rooms/ --target server
 
 # Push services to Minikube Docker environment.
 # HACK: We should just build these in the Minikube context, but the frontend server refuses to build
@@ -102,7 +102,8 @@ docker save dgp1130/chatter-rooms-service | (eval $(minikube docker-env) && dock
 # NOTE: By default this will likely pull images from Docker Hub rather than using the local ones
 # just pushed. You probably want to edit deployments/app.yaml to specify `imagePullPolicy: Never` on
 # the deployment configurations before running this step.
-kubectl apply -f deployments/minikube/
+kubectl apply -f <(kustomize services/rooms/deployment/platforms/minikube/)
+kubectl apply -f deployments/app.yaml
 
 # Add Minikube IP to /etc/hosts. The application *must* be opened with a *.chatter.technology domain
 # or else the nginx ingress will not route requests correctly.
@@ -125,5 +126,6 @@ Since the Kubernetes configs for Minikube and GKE differ slightly, there a separ
 module to be used. To deploy to GKE, simply run:
 
 ```bash
-kubectl apply -f deployment/gke/
+kubectl apply -f <(kustomize build services/rooms/deployment/platforms/gke)
+kubectl apply -f deployments/app.yaml
 ```

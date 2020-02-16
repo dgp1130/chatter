@@ -1,0 +1,36 @@
+# Rooms service.
+kind: Service
+apiVersion: v1
+metadata:
+  name: chatter-rooms-service
+spec:
+  type: NodePort
+  selector:
+    app: chatter-rooms-service
+  ports:
+  - port: 80
+
+---
+
+# Rooms service deployment.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatter-rooms-deployment
+  labels:
+    app: chatter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chatter-rooms-service
+  template:
+    metadata:
+      labels:
+        app: chatter-rooms-service
+    spec:
+      containers:
+      - name: chatter-rooms-service
+        image: chatter-rooms-service
+        ports:
+        - containerPort: 80

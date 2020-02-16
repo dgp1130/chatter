@@ -115,3 +115,38 @@ rooms.currId
 ```
 
 The current ID value owned by a Room. No ID value greater than this is owned by an existing Room.
+
+## Testing Kubernetes
+
+To test the Kubernetes configuration in a local environment, install
+[`kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl/),
+[Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/), and
+[Kustomize](https://github.com/kubernetes-sigs/kustomize).
+
+Then run the following commands:
+
+```shell
+# Start Minikube environment.
+minikube start
+
+# Build the service in the Minikube Docker environment.
+(eval $(minikube docker-env) && docker build --rm -t chatter-rooms-service . --target server)
+
+# Apply the Kubernetes configuration.
+kubectl apply -f <(kustomize deployment/platforms/minikube/)
+
+# Open a tunnel to the Rooms service.
+kubectl port-forward services/chatter-rooms-service 8000:80
+
+# Manually test the service.
+curl -X GET localhost:8000/api/rooms/list
+curl -X POST localhost:8000/api/rooms/create -H "Content-Type: application/json" \
+    -d '{ "name": "Foo" }'
+# ...
+
+# Shut down Minikube
+kubectl delete services/chatter-{rooms,db}-service \
+    deployment.apps/chatter-{rooms,db}-depolyment \
+    pv/chatter-db-volume pvc/chatter-db-claim
+minikube stop
+```

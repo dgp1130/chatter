@@ -1,0 +1,49 @@
+# Database service.
+apiVersion: v1
+kind: Service
+metadata:
+  name: chatter-db-service
+spec:
+  selector:
+    app: chatter-db-service
+  ports:
+  - port: 6379
+    targetPort: 6379
+
+---
+
+# Database service deployment.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatter-db-deployment
+  labels:
+    app: chatter
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: chatter-db-service
+  template:
+    metadata:
+      labels:
+        app: chatter-db-service
+    spec:
+      containers:
+      - name: master
+        image: redis
+        args: [
+          "--save", "3600", "1", "300", "100", "60", "10000",
+          "--appendonly", "yes",
+        ]
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: chatter-db-storage
+          mountPath: /data/
+      volumes:
+      - name: chatter-db-storage
+        persistentVolumeClaim:
+          # Claim implementation differs between platforms.
+          claimName: chatter-db-claim

@@ -1,0 +1,13 @@
+# Sets imagePullPolicy to Never for locally built services.
+# This ensures remote builds are not used accidentally during local development.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatter-rooms-deployment
+spec:
+  template:
+    spec:
+      containers:
+      - name: chatter-rooms-service
+        imagePullPolicy: Never
