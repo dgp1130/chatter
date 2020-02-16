@@ -1,8 +1,4 @@
-FROM node:11-slim as tsc
-
-RUN npm install -g typescript
-
-FROM tsc as deps
+FROM node:11-slim as deps
 
 WORKDIR /chatter/services/rooms/
 COPY package.json .
@@ -15,9 +11,7 @@ FROM deps as build
 
 COPY . .
 
-# Compile all *.ts sources to *.js with the same name/path in the build/ directory.
-# TypeScript compiler is configured in tsconfig.json.
-RUN tsc
+RUN npm run build
 
 FROM build as server
 

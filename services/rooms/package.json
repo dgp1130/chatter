@@ -4,9 +4,10 @@
   "description": "Service which provides CRUD functionality for chat rooms.",
   "main": "server.js",
   "scripts": {
+    "build": "node_modules/.bin/tsc",
     "start": "node build/server.js",
-    "test": "node node_modules/jasmine/bin/jasmine --config=\"jasmine.json\"",
-    "test:debug": "node --inspect=0.0.0.0 node_modules/jasmine/bin/jasmine --config=\"jasmine.json\""
+    "test": "node_modules/.bin/jasmine --config=\"jasmine.json\"",
+    "test:debug": "node --inspect=0.0.0.0 node_modules/.bin/jasmine --config=\"jasmine.json\""
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,7 @@
     "@types/node": "^12.7.5",
     "@types/redis": "^2.8.14",
     "@types/redis-mock": "^0.17.0",
-    "jasmine": "^3.4.0"
+    "jasmine": "^3.4.0",
+    "typescript": "^3.7.5"
   }
 }
