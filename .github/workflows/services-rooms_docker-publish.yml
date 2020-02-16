@@ -4,6 +4,11 @@ on:
   push:
     branches: master
 
+env:
+  GKE_PROJECT: Chatter
+  GKE_CLUSTER: chatter
+  GKE_ZONE: us-west1-a
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,9 +16,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Build image
-      run: docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-service:${GITHUB_SHA} --target server services/rooms/
+      run: docker build -f services/rooms/Dockerfile -t "dgp1130/chatter-rooms-service:${GITHUB_SHA}" --target server services/rooms/
     - name: Save image to TAR
-      run: docker save -o chatter-rooms-service.tar dgp1130/chatter-rooms-service:${GITHUB_SHA}
+      run: docker save -o chatter-rooms-service.tar "dgp1130/chatter-rooms-service:${GITHUB_SHA}"
     - name: Upload image artifact
       uses: actions/upload-artifact@v1
       with:
@@ -26,9 +31,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Build test image
-      run: docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-service-test:${GITHUB_SHA} --target test services/rooms/
+      run: docker build -f services/rooms/Dockerfile -t "dgp1130/chatter-rooms-service-test:${GITHUB_SHA}" --target test services/rooms/
     - name: Run tests
-      run: docker run --rm -t dgp1130/chatter-rooms-service-test:${GITHUB_SHA}
+      run: docker run --rm -t "dgp1130/chatter-rooms-service-test:${GITHUB_SHA}"
 
   publish:
     runs-on: ubuntu-latest
@@ -45,4 +50,34 @@ jobs:
     - name: Login
       run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
     - name: Publish
-      run: docker push dgp1130/chatter-rooms-service:${GITHUB_SHA}
+      run: docker push "dgp1130/chatter-rooms-service:${GITHUB_SHA}"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+    - publish
+    steps:
+    - name: Install gcloud
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.1
+      with:
+        version: '270.0.0'
+        service_account_email: ${{ secrets.GKE_SA_EMAIL }}
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
+    - name: Install Kustomize
+      uses: imranismail/setup-kustomize@v1.2.0
+      with:
+        kustomize-version: "3.5.4"
+    - name: Checkout
+      uses: actions/checkout@v2
+      # Update Docker tag to use the one just published.
+    - name: Kustomize Docker tag
+      working-directory: services/rooms/deployment/platforms/gke/
+      run: kustomize edit set image "chatter-rooms-service=dgp1130/chatter-rooms-service:${GITHUB_SHA}"
+    - name: Deploy
+      run: |
+          gcloud container clusters get-credentials "${GKE_CLUSTER}" \
+            --zone "${GKE_ZONE}" \
+            --project "${GKE_PROJECT}"
+          kustomize build services/rooms/deployment/platforms/gke/ | kubectl apply -f -
+          kubectl rollout status deployment/chatter-db-deployment
+          kubectl rollout status deployment/chatter-rooms-deployment
