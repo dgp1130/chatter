@@ -11,9 +11,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Build image
-      run: docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-service:latest --target server services/rooms/
+      run: docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-service:${GITHUB_SHA} --target server services/rooms/
     - name: Save image to TAR
-      run: docker save -o chatter-rooms-service.tar dgp1130/chatter-rooms-service:latest
+      run: docker save -o chatter-rooms-service.tar dgp1130/chatter-rooms-service:${GITHUB_SHA}
     - name: Upload image artifact
       uses: actions/upload-artifact@v1
       with:
@@ -26,9 +26,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Build test image
-      run: docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-service-test:latest --target test services/rooms/
+      run: docker build -f services/rooms/Dockerfile -t dgp1130/chatter-rooms-service-test:${GITHUB_SHA} --target test services/rooms/
     - name: Run tests
-      run: docker run --rm -t dgp1130/chatter-rooms-service-test:latest
+      run: docker run --rm -t dgp1130/chatter-rooms-service-test:${GITHUB_SHA}
 
   publish:
     runs-on: ubuntu-latest
@@ -45,4 +45,4 @@ jobs:
     - name: Login
       run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
     - name: Publish
-      run: docker push dgp1130/chatter-rooms-service:latest
+      run: docker push dgp1130/chatter-rooms-service:${GITHUB_SHA}
