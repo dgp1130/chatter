@@ -29,7 +29,6 @@ describe('rooms', () => {
             expect(res.status).toBe(HttpStatus.CREATED);
             expect(res.headers).toEqual(new Map([
                 [ 'Content-Type', 'application/json' ],
-                [ 'Access-Control-Allow-Origin', '*' ],
             ]));
             expect(JSON.parse(res.body)).toEqual({
                 id: 0,
@@ -173,7 +172,6 @@ describe('rooms', () => {
             expect(res.status).toBe(HttpStatus.OK);
             expect(res.headers).toEqual(new Map([
                 [ 'Content-Type', 'application/json' ],
-                [ 'Access-Control-Allow-Origin', '*' ],
             ]));
             expect(JSON.parse(res.body)).toEqual([]);
         });
@@ -191,7 +189,6 @@ describe('rooms', () => {
             expect(res.status).toBe(HttpStatus.OK);
             expect(res.headers).toEqual(new Map([
                 [ 'Content-Type', 'application/json' ],
-                [ 'Access-Control-Allow-Origin', '*' ],
             ]));
             expect(JSON.parse(res.body)).toEqual([{
                 id: 0,
