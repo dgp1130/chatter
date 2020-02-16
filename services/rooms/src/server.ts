@@ -16,6 +16,11 @@ app.options('*', cors());
 app.post('/api/rooms/create', cors(), simpleResponder(rooms.create));
 app.get('/api/rooms/list', cors(), simpleResponder(rooms.list));
 
+// Test endpoint to verify automated deployment.
+app.get('/api/deployed', (req, res) => {
+    res.end('Deployed!');
+});
+
 // Begin listening for requests.
 const port = process.env.PORT || 80;
 app.listen(port, () => {
