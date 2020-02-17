@@ -53,6 +53,33 @@ describe('rooms', () => {
                     + ' be set to "application/json".');
         });
 
+        it('responds HTTP Created when given JSON Content-Type with charset', async () => {
+            spyOn(roomsDb, 'create').and.returnValue(Promise.resolve(new Room({
+                id: 0,
+                name: 'foo',
+            })));
+
+            const res = await rooms.create(new RequestFake({
+                headers: new Map([
+                    [ 'Content-Type', 'application/json; charset=utf-8' ],
+                ]),
+                body: {
+                    name: 'foo',
+                },
+            }).asRequest());
+
+            expect(roomsDb.create).toHaveBeenCalledWith('foo');
+
+            expect(res.status).toBe(HttpStatus.CREATED);
+            expect(res.headers).toEqual(new Map([
+                [ 'Content-Type', 'application/json' ],
+            ]));
+            expect(JSON.parse(res.body)).toEqual({
+                id: 0,
+                name: 'foo',
+            });
+        });
+
         it('responds HTTP Bad Request when no body is given', async () => {
             spyOn(roomsDb, 'create');
 
