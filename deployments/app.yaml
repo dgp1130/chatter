@@ -51,6 +51,7 @@ metadata:
     app: chatter
 spec:
   replicas: 1
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app: chatter-frontend-service
@@ -64,3 +65,9 @@ spec:
         image: dgp1130/chatter-frontend-service
         ports:
         - containerPort: 80
+        # Trivial service with trivial QPS. Remove minimum CPU requirements because I'm cheap.
+        resources:
+          limits:
+            cpu: "0.1"
+          requests:
+            cpu: "0"

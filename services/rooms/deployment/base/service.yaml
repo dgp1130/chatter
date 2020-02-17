@@ -21,6 +21,7 @@ metadata:
     app: chatter
 spec:
   replicas: 1
+  revisionHistoryLimit: 2
   strategy:
     rollingUpdate:
       # Allow one extra pod to be created during rollout.
@@ -38,3 +39,9 @@ spec:
         image: chatter-rooms-service
         ports:
         - containerPort: 80
+        # Trivial service with trivial QPS. Remove minimum CPU requirements because I'm cheap.
+        resources:
+          limits:
+            cpu: "0.1"
+          requests:
+            cpu: "0"
