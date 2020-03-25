@@ -37,4 +37,11 @@ export class RoomsService {
       }),
     );
   }
+
+  create(name: string): Observable<Room> {
+    const createUrl = 'http://chatter.technology/api/rooms/create';
+    return this.http.post<unknown>(createUrl, { name }).pipe(
+      map((serial) => Room.deserialize(serial)),
+    );
+  }
 }
