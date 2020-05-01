@@ -1,5 +1,9 @@
 language: minimal # Includes Docker
 
+branches:
+  only:
+  - master
+
 services:
   - docker
 
