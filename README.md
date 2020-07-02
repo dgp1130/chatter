@@ -2,10 +2,6 @@
 
 Chat application built with NodeJS TypeScript microservices and a Flutter client.
 
-A running instance is available at [http://chatter.technology/](http://chatter.technology/),
-hosted on [Google Cloud Platform](https://cloud.google.com/) w/
-[Google Domains](https://domains.google.com) (but using Google Cloud nameservers).
-
 [![Build Status](https://travis-ci.com/dgp1130/chatter.svg?branch=master)](https://travis-ci.com/dgp1130/chatter)
 
 ## Motivation
@@ -30,11 +26,6 @@ Below is a list of links to project-specific resources. Most of these require au
 and/or edit and will only work for me, I'm just listing these out so I don't forget and struggle to
 find them in the future.
 
-* [Google Kubernetes Engine Console](https://console.cloud.google.com/kubernetes/list?project=chatter-244623)
-* [Google Domains configuration](https://domains.google.com/m/registrar/chatter.technology/dns)
-  * This owns the DNS but simply redirects to Google Cloud's nameservers.
-* [Google Cloud DNS configuration](https://console.cloud.google.com/net-services/dns/zones/chatter-dns-zone?project=chatter-244623)
-  * This owns the Google Cloud nameserver configuration.
 * [Docker Hub author](https://hub.docker.com/u/dgp1130)
 * [Continuous Integration](https://travis-ci.com/dgp1130/chatter)
   * [Configuration file](.travis.yml)
