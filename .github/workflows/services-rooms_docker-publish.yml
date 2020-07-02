@@ -52,32 +52,33 @@ jobs:
     - name: Publish
       run: docker push "dgp1130/chatter-rooms-service:${GITHUB_SHA}"
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs:
-    - publish
-    steps:
-    - name: Install gcloud
-      uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.1
-      with:
-        version: '270.0.0'
-        service_account_email: ${{ secrets.GKE_SA_EMAIL }}
-        service_account_key: ${{ secrets.GKE_SA_KEY }}
-    - name: Install Kustomize
-      uses: imranismail/setup-kustomize@v1.2.0
-      with:
-        kustomize-version: "3.5.4"
-    - name: Checkout
-      uses: actions/checkout@v2
-      # Update Docker tag to use the one just published.
-    - name: Kustomize Docker tag
-      working-directory: services/rooms/deployment/platforms/gke/
-      run: kustomize edit set image "chatter-rooms-service=dgp1130/chatter-rooms-service:${GITHUB_SHA}"
-    - name: Deploy
-      run: |
-          gcloud container clusters get-credentials "${GKE_CLUSTER}" \
-            --zone "${GKE_ZONE}" \
-            --project "${GKE_PROJECT_ID}"
-          kustomize build services/rooms/deployment/platforms/gke/ | kubectl apply -f -
-          kubectl rollout status deployment/chatter-db-deployment
-          kubectl rollout status deployment/chatter-rooms-deployment
+  # Disable deployment as GKE instance has been shut down.
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs:
+  #   - publish
+  #   steps:
+  #   - name: Install gcloud
+  #     uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.1
+  #     with:
+  #       version: '270.0.0'
+  #       service_account_email: ${{ secrets.GKE_SA_EMAIL }}
+  #       service_account_key: ${{ secrets.GKE_SA_KEY }}
+  #   - name: Install Kustomize
+  #     uses: imranismail/setup-kustomize@v1.2.0
+  #     with:
+  #       kustomize-version: "3.5.4"
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
+  #     # Update Docker tag to use the one just published.
+  #   - name: Kustomize Docker tag
+  #     working-directory: services/rooms/deployment/platforms/gke/
+  #     run: kustomize edit set image "chatter-rooms-service=dgp1130/chatter-rooms-service:${GITHUB_SHA}"
+  #   - name: Deploy
+  #     run: |
+  #         gcloud container clusters get-credentials "${GKE_CLUSTER}" \
+  #           --zone "${GKE_ZONE}" \
+  #           --project "${GKE_PROJECT_ID}"
+  #         kustomize build services/rooms/deployment/platforms/gke/ | kubectl apply -f -
+  #         kubectl rollout status deployment/chatter-db-deployment
+  #         kubectl rollout status deployment/chatter-rooms-deployment
